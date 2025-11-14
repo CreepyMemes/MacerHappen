@@ -5,7 +5,7 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import serializers
-from ..models import User, Client
+from ..models import User, Participant, Organizer
 from ..utils import (
     UserValidationMixin,
     UsernameValidationMixin,
@@ -13,7 +13,7 @@ from ..utils import (
     PasswordValidationMixin,
     PhoneNumberValidationMixin,
     UIDTokenValidationSerializer,
-    BarberValidationMixin,
+    OrganizerValidationMixin,
 )
 
 class GetCurrentUserSerializer(UserValidationMixin, serializers.Serializer):
@@ -29,10 +29,10 @@ class GetCurrentUserSerializer(UserValidationMixin, serializers.Serializer):
         return {'me': user.to_dict()}
     
 
-class RegisterClientSerializer(UsernameValidationMixin, EmailValidationMixin, PasswordValidationMixin, PhoneNumberValidationMixin, serializers.Serializer):
+class RegisterParticipantSerializer(UsernameValidationMixin, EmailValidationMixin, PasswordValidationMixin, PhoneNumberValidationMixin, serializers.Serializer):
     """
-    Register a client. Sends a confirmation email.
-    Client must provide valid username and password
+    Register a participant. Sends a confirmation email.
+    Participant must provide valid username and password
     """
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True)
@@ -50,7 +50,7 @@ class RegisterClientSerializer(UsernameValidationMixin, EmailValidationMixin, Pa
         return attrs
     
     def create(self, validated_data):
-        client = Client(
+        participant = Participant(
             email=validated_data['email'], 
             username=validated_data['username'], 
             name=validated_data['name'],
@@ -59,17 +59,17 @@ class RegisterClientSerializer(UsernameValidationMixin, EmailValidationMixin, Pa
         )
 
         if 'phone_number' in validated_data:
-            client.phone_number = validated_data['phone_number']
+            participant.phone_number = validated_data['phone_number']
 
-        client.set_password(validated_data['password'])
-        client.save()
+        participant.set_password(validated_data['password'])
+        participant.save()
 
-        return client
+        return participant
 
 
-class RegisterBarberSerializer(UIDTokenValidationSerializer, BarberValidationMixin, UsernameValidationMixin, PasswordValidationMixin, serializers.Serializer):
+class RegisterOrganizerSerializer(UIDTokenValidationSerializer, OrganizerValidationMixin, UsernameValidationMixin, PasswordValidationMixin, serializers.Serializer):
     """
-    Barber completes registration via invite link. Only sets username and password.
+    Organizer completes registration via invite link. Only sets username and password.
     """
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
@@ -78,30 +78,30 @@ class RegisterBarberSerializer(UIDTokenValidationSerializer, BarberValidationMix
     description = serializers.CharField(required=False)
 
     def validate(self, attrs):
-        attrs = self.validate_uid_token(attrs, target_key='barber')  # Returns User object to 'barber' key
-        attrs = self.validate_barber(attrs, check_active=False)      # Changes User object in 'barber' to be type Barber
+        attrs = self.validate_uid_token(attrs, target_key='organizer')  # Returns User object to 'organizer' key
+        attrs = self.validate_organizer(attrs, check_active=False)      # Changes User object in 'organizer' to be type Organizer
         attrs = self.validate_username_format(attrs)
         attrs = self.validate_username_unique(attrs)
 
-        if attrs['barber'].is_active:
+        if attrs['organizer'].is_active:
             raise serializers.ValidationError('Account already registered.')
 
         return attrs
 
     def create(self, validated_data):
-        barber = validated_data['barber']
-        barber.username = validated_data['username']
-        barber.name = validated_data['name']
-        barber.surname = validated_data['surname']
-        barber.is_active = True
+        organizer = validated_data['organizer']
+        organizer.username = validated_data['username']
+        organizer.name = validated_data['name']
+        organizer.surname = validated_data['surname']
+        organizer.is_active = True
 
         if 'description' in validated_data:
-            barber.description = validated_data['description']
+            organizer.description = validated_data['description']
 
-        barber.set_password(validated_data['password'])
-        barber.save()
+        organizer.set_password(validated_data['password'])
+        organizer.save()
 
-        return barber
+        return organizer
 
 
 class GetEmailFromTokenSerializer(UIDTokenValidationSerializer, serializers.Serializer):
@@ -117,9 +117,9 @@ class GetEmailFromTokenSerializer(UIDTokenValidationSerializer, serializers.Seri
         return {'email': user.email}
 
 
-class VerifyClientEmailSerializer(UIDTokenValidationSerializer):
+class VerifyParticipantEmailSerializer(UIDTokenValidationSerializer):
     """
-    Handles token validations when a client attempts to verify their account
+    Handles token validations when a participant attempts to verify their account
     """
     def validate(self, attrs):
         attrs = self.validate_uid_token(attrs)
@@ -130,12 +130,12 @@ class VerifyClientEmailSerializer(UIDTokenValidationSerializer):
         return attrs
 
     def save(self, **kwargs):
-        client = self.validated_data['user']
+        participant = self.validated_data['user']
 
-        client.is_active = True
-        client.save()
+        participant.is_active = True
+        participant.save()
 
-        return client
+        return participant
 
 
 class LoginSerializer(serializers.Serializer):

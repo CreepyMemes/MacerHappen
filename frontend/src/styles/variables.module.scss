@@ -1,0 +1,54 @@
+// Main Colors
+$color-primary: #2b2b2a;
+$color-secondary: #e3e1dd;
+$color-tertiary: #c1bfba;
+$color-light: #f9f7f3;
+$color-accent: #585858;
+$color-muted: #a5a39a;
+$color-lighter: #454545;
+$color-main: #343432;
+
+// Icon colors
+$color-icon: #efdc9f;
+$color-rating: #fabb3d;
+
+// Card colors
+$color-card: #f4f2ee;
+$color-card-darker: #efebe8;
+$color-card-dark: #efdc9f;
+
+// Borders/Shadows
+$border: #696968;
+$border-light: #bab8b8;
+$border-error: #fba4a4;
+$border-hover: #dcbb51;
+$border-radius: 8px;
+
+// Error colors
+$color-error-bg: #fae1e1;
+$color-error: #f44;
+
+// Tag colors
+$color-tag-green-bg: #e9f9eb;
+$color-tag-green-text: #23863a;
+$color-tag-green-border: #aae3b7;
+
+$color-tag-yellow-bg: #faf2dc;
+$color-tag-yellow-text: #9d6b07;
+$color-tag-yellow-border: #f8cd6f;
+
+$color-tag-blue-bg: #e6f0fa;
+$color-tag-blue-text: #1765ad;
+$color-tag-blue-border: #85b6e2;
+
+$color-tag-red-bg: $color-error-bg;
+$color-tag-red-text: $color-error;
+$color-tag-red-border: $border-error;
+
+// Screen sizes
+$bp-huge: 126.87em; //2030px
+$bp-large: 78.15em; // 1250px
+$bp-medium: 61.25em; // 980px
+$bp-medium-small: 48em; // 768px
+$bp-small: 37.5em; // 600px
+$bp-smallest: 31.25em; // 500px

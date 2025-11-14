@@ -1,0 +1,36 @@
+@use '@styles/variables.module.scss' as *;
+
+.features {
+  list-style: none;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  li {
+    display: flex;
+    flex-direction: column;
+
+    .feature-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      font-size: 1.7rem;
+      color: $color-secondary;
+      margin-bottom: 0.18rem;
+    }
+  }
+
+  span:last-child {
+    color: $color-muted;
+    font-size: 1.2rem;
+  }
+}
+
+.note {
+  text-align: left;
+  color: $color-muted;
+  font-size: 1.5rem;
+}

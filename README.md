@@ -1,115 +1,189 @@
-## **1. Define Project Structure**
+### Development Workflow
 
-### **Backend (Django)**
+This section is about the development workflow in programming and testing the application on local machine.
 
-- **App Structure:**
+> [!TIP]
+> If you want to run **VSCode** inside the backend container.
+> When you open the project `backend` or `frontend` foldlers in **VSCode**,
+> it shoullt automaticaly detect the `.devcontainer` configurations.
+>
+> If it doesn't detect it or you ignore the notification you can:
+> Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
+> Select `Remote-Containers: Reopen in Container`.
 
-  - `users` → handle organizers & participants, authentication, profile, preferences (categories, budget).
-  - `events` → event creation, moderation, fetching events for feed.
-  - `recommendation` → AI logic for personalized feed.
+#### Clone the repository
 
-- **Models:**
+If the repository is public:
 
-  - `User` → type (organizer/participant), email, password, budget, categories (many-to-many).
-  - `Event` → title, description, category, price, organizer, date/time, status (approved/blocked).
-  - `Swipe` → participant, event, liked (boolean).
+```bash
+git clone https://github.com/CreepyMemes/MacerHappen.git
+cd MacerHappen/
+```
 
-- **Endpoints (REST API with DRF):**
+If the repository is private:
 
-  - `/auth/` → login / signup
-  - `/events/` → list events, create event, get event by ID
-  - `/swipe/` → record swipe
-  - `/recommendations/` → personalized event feed
-  - `/notifications/` → new relevant events
+> [!IMPORTANT]
+> Change **TOKEN** to your github token
 
----
+```bash
+git clone https://CreepyMemes:TOKEN@github.com/CreepyMemes/MacerHappen.git
+cd MacerHappen
+```
 
-### **Frontend (React)**
+#### Build and launch all containers
 
-- **Pages/Components:**
+```bash
+docker compose -f docker-compose.dev.yml --env-file .env.dev up --build
+```
 
-  - `Login/Register`
-  - `Profile Setup` → choose categories, set budget
-  - `EventFeed` → swipe interface (like/dislike)
-  - `Notifications` → list of new suggested events
-  - `EventCreation` → form for organizers
-  - `EventDetails` → modal or page showing event info
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:8000](http://localhost:8000)
 
-- **State Management:**
+#### (Optional) Reset dev environment
 
-  - Use React Context or Redux for:
+```bash
+docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
+```
 
-    - User session
-    - Event feed
-    - Notifications
+## Development Guide
 
-- **API Integration:**
+### Backend (Django)
 
-  - Fetch recommended events from `/recommendations/`
-  - Post swipes to `/swipe/`
-  - Get notifications
+The Django dev server reloads automatically on code changes.
 
----
+> [!IMPORTANT]
+> Run the following commands _inside_ the container.
+> by running the following command:
+>
+> ```bash
+> docker compose -f docker-compose.dev.yml --env-file .env.dev exec -it backend sh
+> ```
 
-### **Database (PostgreSQL)**
+#### Configuration
 
-- **Tables:**
+Create a new `.env` file in root directory, and enter your credentials there, follow the example at `.env.example`:
 
-  - `users`
-  - `events`
-  - `categories`
-  - `swipes`
+```sh
+# Django config
+SECRET_KEY=your-super-secret-key-here
+DJANGO_ALLOWED_HOSTS=*
+DJANGO_SETTINGS_MODULE=config.settings.dev # change .dev or .prod
 
-- **Relationships:**
+# Database config
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_DB=mydb
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
 
-  - `users` → `swipes` → `events` (many-to-many via swipes)
-  - `events` → `categories` (many-to-many)
-  - `participants` → `categories` (many-to-many)
+# Email config
+EMAIL_HOST='smtp.server.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='your.stmp@email.com'
+EMAIL_HOST_PASSWORD='your stmp pass here'
+```
 
----
+#### Dependencies
 
-## **2. AI Integration**
+To install new dependencies, for either base, prod or dev:
 
-- **Organizer moderation:**
+```bash
+pip install <package>
+pip freeze > requirements/base.txt
+pip freeze > requirements/dev.txt
+pip freeze > requirements/prod.txt
+```
 
-  - Lightweight solution: Python function/class in Django that checks text (and optionally image URLs) for inappropriate content using a library or small model.
+#### Migrations
 
-- **Participant feed:**
+To migrate database:
 
-  - Simple filter: match event categories and price to participant preferences.
-  - Optional enhancement: prioritize events that match past likes.
+```bash
+python manage.py migrate
+```
 
----
+#### SuperUser
 
-## **3. Development Plan (Step by Step)**
+To create an admin user:
 
-### **Phase 1: Setup**
+```bash
+python manage.py createsuperuser
+```
 
-- Set up Django + DRF project
-- Connect to PostgreSQL
-- Set up React project with basic routing
-- Set up authentication
+#### Run tests
 
-### **Phase 2: Models & Backend APIs**
+To simply run all tests:
 
-- Create `User`, `Event`, `Swipe`, `Category` models
-- Build CRUD APIs for events
-- Build swipe API
+```bash
+python manage.py test api
+```
 
-### **Phase 3: AI/Recommendation Logic**
+To check test coverage, we use `coverage` package that highlights which part of the codebase are being tested:
 
-- Implement category & budget-based filtering
-- Implement moderation check on event creation
+```bash
+coverage run --source="." manage.py test api
+coverage html
+```
 
-### **Phase 4: Frontend**
+#### Model diagram
 
-- Build login/register
-- Build swipe feed with recommendations
-- Build organizer event creation page
-- Build notifications page
+To generate a models diagram, we use `django-extensions` package that includes a diagram generator for all the implemented models found in the project, to use:
 
-### **Phase 5: Testing & Polish**
+```bash
+python manage.py graph_models -a -o models_diagram.png
+```
 
-- Test end-to-end flow
-- Add basic styling
-- Optional: add notification triggers for new events
+### Frontend (React + Vite)
+
+Vite provides automatic hot-reloading when frontend files are modified.
+
+> [!IMPORTANT]
+> Run the following commands _inside_ the container.
+> by running the following command:
+>
+> ```bash
+> docker compose -f docker-compose.dev.yml --env-file .env.dev exec -it frontend sh
+> ```
+
+#### Dependencies
+
+To install new dependencies, for either prod or dev:
+
+```bash
+npm install <package> --save-dev
+npm install <package>
+```
+
+#### Run tests
+
+[TODO]
+
+## Production Workflow
+
+### Deployment
+
+The deployment process is **fully automated** via [GitHub Actions](https://github.com/features/actions). The CI/CD pipeline is triggered by every **Pull Request**:
+
+#### CI/CD Workflow Overview
+
+```mermaid
+flowchart TD
+    PR(🔀 Pull Request)
+    Tests{{🧪 Runs Tests}}
+    Passed([✅ Able to Merge])
+    Failed([❌ Cannot Merge])
+    Deployment(🚀 Runs Deployment)
+    PR --> Tests
+    Tests -- Passed --> Passed
+    Tests -- Failed --> Failed
+    Passed -- Merge --> Deployment
+```
+
+1. **Build & Test:**  
+   All pull requests trigger automated builds and tests in a production-like Docker environment.
+2. **Merge & Deploy Automatically:**  
+   If tests pass, the pull request can be merged.  
+   Once merged, the code is automatically deployed to the server via SSH.
+
+- Environment variables are provided securely with GitHub Secrets.
+- Deployments use a custom `deploy.sh` script for zero downtime.

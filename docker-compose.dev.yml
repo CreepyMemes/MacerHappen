@@ -20,7 +20,6 @@ services:
       - RUN_MIGRATIONS=1
     depends_on:
       - db
-      - redis
     ports:
       - '8000:8000'
     volumes:

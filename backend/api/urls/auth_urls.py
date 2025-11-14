@@ -1,10 +1,10 @@
 from django.urls import path
 from ..views import (
     get_current_user,
-    register_client,
-    register_barber,
+    register_participant,
+    register_organizer,
     get_email_from_token,
-    verify_client,
+    verify_participant,
     login_user,
     logout_user,
     request_password_reset,
@@ -13,11 +13,11 @@ from ..views import (
 )
 
 urlpatterns = [
-    # Client registration management
-    path('register/', register_client, name='register_client'),
-    path('register/<uidb64>/<token>/', register_barber, name='register_barber'),
+    # Participant registration management
+    path('register/', register_participant, name='register_participant'),
+    path('register/<uidb64>/<token>/', register_organizer, name='register_organizer'),
     path('email/<uidb64>/<token>/', get_email_from_token, name='get_email_from_token'),
-    path('verify/<uidb64>/<token>/', verify_client, name='verify_client_email'),
+    path('verify/<uidb64>/<token>/', verify_participant, name='verify_participant_email'),
     
     # Operations for authenticated users
     path('me/', get_current_user, name='get_current_user'),

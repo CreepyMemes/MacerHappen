@@ -9,16 +9,16 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from ..utils import(
-    send_client_verify_email,
+    send_participant_verify_email,
     send_password_reset_email,
 )
 from ..serializers import (
     GetCurrentUserSerializer,
-    RegisterClientSerializer,
+    RegisterParticipantSerializer,
     GetEmailFromTokenSerializer,
-    VerifyClientEmailSerializer,
+    VerifyParticipantEmailSerializer,
     LoginSerializer,
-    RegisterBarberSerializer,
+    RegisterOrganizerSerializer,
     LogoutSerializer,
     RequestPasswordResetSerializer,
     ConfirmPasswordResetSerializer,
@@ -46,54 +46,54 @@ def get_current_user(request):
 
 @extend_schema(
     methods=['POST'],
-    request=RegisterClientSerializer,
+    request=RegisterParticipantSerializer,
     responses={
-        201: OpenApiResponse(description="Client registered, check your email to verify."),
+        201: OpenApiResponse(description="Participant registered, check your email to verify."),
         400: OpenApiResponse(description="Validation error."),
     },
-    description="Register a new client. Creates an inactive client account and sends a verification email link.",
+    description="Register a new participant. Creates an inactive participant account and sends a verification email link.",
 )
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @authentication_classes([]) 
 @parser_classes([JSONParser]) 
-def register_client(request):
+def register_participant(request):
     """
-    Client self registration. Creates inactive client and sends confirmation email.
+    Participant self registration. Creates inactive participant and sends confirmation email.
     """
-    serializer = RegisterClientSerializer(data=request.data)
+    serializer = RegisterParticipantSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    client = serializer.save()
+    participant = serializer.save()
 
-    uid = urlsafe_base64_encode(force_bytes(client.pk))
-    token = default_token_generator.make_token(client)
-    send_client_verify_email(client.email, uid, token, settings.FRONTEND_URL)
+    uid = urlsafe_base64_encode(force_bytes(participant.pk))
+    token = default_token_generator.make_token(participant)
+    send_participant_verify_email(participant.email, uid, token, settings.FRONTEND_URL)
 
-    return Response({'detail': 'Client registered, check your email to verify.'}, status=status.HTTP_201_CREATED)
+    return Response({'detail': 'Participant registered, check your email to verify.'}, status=status.HTTP_201_CREATED)
 
 
 @extend_schema(
     methods=['POST'],
-    request=RegisterBarberSerializer,
+    request=RegisterOrganizerSerializer,
     responses={
-        201: OpenApiResponse(description="Barber registered and account activated."),
+        201: OpenApiResponse(description="Organizer registered and account activated."),
         400: OpenApiResponse(description="Validation error or expired/invalid invite link."),
     },
-    description="Barber completes registration via invite link by setting username and password.",
+    description="Organizer completes registration via invite link by setting username and password.",
 )
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @authentication_classes([]) 
 @parser_classes([JSONParser]) 
-def register_barber(request, uidb64, token): 
+def register_organizer(request, uidb64, token): 
     """
-    Barber completes registration via invite link by setting username and password.
+    Organizer completes registration via invite link by setting username and password.
     """
-    serializer = RegisterBarberSerializer(data=request.data, context={'uidb64': uidb64, 'token': token})
+    serializer = RegisterOrganizerSerializer(data=request.data, context={'uidb64': uidb64, 'token': token})
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
-    return Response({'detail': 'Barber registered and account activated.'}, status=status.HTTP_201_CREATED)
+    return Response({'detail': 'Organizer registered and account activated.'}, status=status.HTTP_201_CREATED)
     
 
 @extend_schema(
@@ -121,17 +121,17 @@ def get_email_from_token(request, uidb64, token):
         200: OpenApiResponse(description="Email verified successfully."),
         400: OpenApiResponse(description="Invalid or expired confirmation link."),
     },
-    description="Verify client account via email confirmation link.",
+    description="Verify participant account via email confirmation link.",
 )
 @api_view(['GET'])
 @permission_classes([AllowAny])
 @authentication_classes([]) 
 @parser_classes([JSONParser]) 
-def verify_client(request, uidb64, token):
+def verify_participant(request, uidb64, token):
     """
-    Verifies client account from confirmation email link.
+    Verifies participant account from confirmation email link.
     """
-    serializer = VerifyClientEmailSerializer(data=request.data, context={'uidb64': uidb64, 'token': token})
+    serializer = VerifyParticipantEmailSerializer(data=request.data, context={'uidb64': uidb64, 'token': token})
     serializer.is_valid(raise_exception=True)
     serializer.save()
 

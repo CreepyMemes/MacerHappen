@@ -1,0 +1,5 @@
+
+add categories and budget to input for registering participants
+
+ideas:
+make it more like social media where you can view accounts and their profiles, both for organizers and participants
