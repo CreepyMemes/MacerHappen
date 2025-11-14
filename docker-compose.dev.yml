@@ -10,11 +10,6 @@ services:
     ports:
       - '5432:5432' # Exposed for DBeaver database analysis
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - '6379:6379'
-
   backend:
     build:
       context: ./backend
@@ -32,32 +27,6 @@ services:
       - ./backend:/app
       - media_data:/app/media
     command: python manage.py runserver 0.0.0.0:8000
-
-  celery:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    env_file:
-      - .env.dev
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - db
-      - redis
-    command: celery -A config worker -l info
-
-  celery-beat:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    env_file:
-      - .env.dev
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - db
-      - redis
-    command: celery -A config beat -l info
 
   frontend:
     build:
