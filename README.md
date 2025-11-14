@@ -16,7 +16,7 @@
 
 - **Endpoints (REST API with DRF):**
 
-  - `/auth/` → login/signup
+  - `/auth/` → login / signup
   - `/events/` → list events, create event, get event by ID
   - `/swipe/` → record swipe
   - `/recommendations/` → personalized event feed
