@@ -4,7 +4,7 @@ from ..views import (
     register_participant,
     register_organizer,
     get_email_from_token,
-    verify_participant,
+    verify_user_email,
     login_user,
     logout_user,
     request_password_reset,
@@ -13,11 +13,13 @@ from ..views import (
 )
 
 urlpatterns = [
-    # Participant registration management
-    path('register/', register_participant, name='register_participant'),
-    path('register/<uidb64>/<token>/', register_organizer, name='register_organizer'),
+    # User registration management
+    path('register/participant/', register_participant, name='register_participant'),
+    path('register/organizer/', register_organizer, name='register_organizer'),
+
+    # Email verification management
     path('email/<uidb64>/<token>/', get_email_from_token, name='get_email_from_token'),
-    path('verify/<uidb64>/<token>/', verify_participant, name='verify_participant_email'),
+    path('verify/<uidb64>/<token>/', verify_user_email, name='verify_user_email'),
     
     # Operations for authenticated users
     path('me/', get_current_user, name='get_current_user'),

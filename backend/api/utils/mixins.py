@@ -200,122 +200,61 @@ class OrganizerValidationMixin(ModelInstanceOrIDValidationMixin):
         return self.validate_user_model(Organizer, attrs, check_active)
 
 
-class GetAdminsMixin:
+class CategoryValidationMixin:
     """
-    Mixin for retrieving and serializing Admin models.
+    Provides helpers to validate category IDs.
     """
-    def get_admins_queryset(self):
-        """
-        Returns Admin queryset in the system.
-        """
-        from ..models import Admin
-        return Admin.objects.all()
-    
-    def get_admin_private(self, admin):
-        """
-        Returns all data for a single admin.
-        """
-        return admin.to_dict()
-    
-    def get_admins_private(self):
-        """
-        Returns all admins as full dicts.
-        """
-        return [self.get_admin_private(a) for a in self.get_admins_queryset()]
-    
+    def validate_categories(self, attrs, field_name="category_ids"):
+        from ..models import Category
 
-class GetParticipantsMixin:
+        ids = attrs.get(field_name, [])
+        if not ids:
+            return attrs
+        
+        categories = Category.objects.filter(id__in=ids)
+
+        if categories.count() != len(ids):
+            raise serializers.ValidationError("One or more categories IDs are invalid.")
+        
+        attrs["categories"] = categories
+        return attrs
+
+
+class EventValidationMixin:
     """
-    Mixin for retrieving and serializing Participant models.
+    Helpers to find and validate events.
     """
-    _PUBLIC_EXCLUDES = ['email', 'phone_number', 'is_active', 'total_appointments', 'completed_appointments', 'next_appointment', 'total_spent']
+    def validate_find_event(self, attrs):
+        from ..models import Event
 
-    def get_participants_queryset(self, show_all=False):
-        """
-        Returns Participant queryset in the system.
-        If show_all is True, returns all participants.
-        """
-        from ..models import Participant
-        return Participant.objects.filter(is_active=True) if not show_all else Participant.objects.all()
-    
-    def get_participant_public(self, participant):
-        """
-        Returns only the public data for a single participant.
-        """
-        data = participant.to_dict().copy()
-        for field in self._PUBLIC_EXCLUDES:
-            data.pop(field, None)
-        return data
-    
-    def get_participant_private(self, participant):
-        """
-        Returns all data for a single participant.
-        """
-        return participant.to_dict()
-    
-    def get_participants_private(self, show_all=False):
-        """
-        Returns all participants as full dicts (all or only active).
-        """
-        return [self.get_participant_private(b) for b in self.get_participants_queryset(show_all=show_all)]
-    
-    def get_participants_public(self):
-        """
-        Returns all active participants as public dicts.
-        """
-        return [self.get_participant_public(b) for b in self.get_participants_queryset()]
+        organizer = attrs["organizer"]
+        event_id = self.context.get("event_id")
+
+        try:
+            event = Event.objects.get(id=event_id, organizer=organizer)
+        except Event.DoesNotExist:
+            raise serializers.ValidationError("Event not found for this organizer.")
+        
+        attrs["event"] = event
+        return attrs
 
 
-class GetOrganizersMixin:
+class SwipeValidationMixin:
     """
-    Mixin for retrieving and serializing Organizer models.
+    Helpers for swipe creation/update.
     """
-    _PUBLIC_EXCLUDES = ['email', '',  '', '', 'is_active', '']
+    def validate_event_for_swipe(self, attrs):
+        from ..models import Event
+        participant = attrs["participant"]
+        event_id = attrs.get("event_id")
 
-    def get_organizers_queryset(self, show_all=False):
-        """
-        Returns Organizer queryset in the system.
-        If show_all is True, returns all organizers.
-        """
-        from ..models import Organizer
-        return Organizer.objects.filter(is_active=True) if not show_all else Organizer.objects.all()
-    
-    def get_organizer_public(self, barber):
-        """
-        Returns only the public data for a single organizer.
-        """
-        data = organizer.to_dict().copy()
-        for field in self._PUBLIC_EXCLUDES:
-            data.pop(field, None)
-        return data
-    
-    def get_organizer_private(self, organizer):
-        """
-        Returns all data for a single organizer.
-        """
-        return organizer.to_dict()
-    
-    def get_organizers_private(self, show_all=False):
-        """
-        Returns all organizers as full dicts (all or only active).
-        """
-        return [self.get_organizer_private(b) for b in self.get_organizers_queryset(show_all=show_all)]
-    
-    def get_organizers_public(self):
-        """
-        Returns all active organizers as public dicts.
-        """
-        return [self.get_organizer_public(b) for b in self.get_organizers_queryset()]
-    
-    def get_organizers_completed_public(self, participant):
-        """
-        Returns public data for all organizers that the participant had a completed appointment with.
-        """
-        from ..models import Organizer
-        from ..models import AppointmentStatus
+        if not event_id:
+            raise serializers.ValidationError("event_id is required.")
+        
+        try:
+            event = Event.objects.get(id=event_id, approved=True)
+        except Event.DoesNotExist:
+            raise serializers.ValidationError("Event not found or not approved.")
 
-        # All ids of organizers the participant had a completed appointment with
-        organizer_ids = participant.appointments_created.filter(status=AppointmentStatus.COMPLETED.value).values_list('organizer_id', flat=True).distinct()
-
-        # Only active organizers (is_active=True), matching get_organizers_public
-        return [self.get_organizer_public(organizer) for organizer in Organizer.objects.filter(id__in=organizer_ids, is_active=True)]
+        attrs["event"] = event
+        return attrs

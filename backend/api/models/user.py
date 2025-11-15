@@ -184,9 +184,16 @@ class Organizer(User):
     Organizers are regular users who can register themselves via the API.
     They must provide a valid email and username during registration.
     """
+    def _phone_number_validator():
+        """
+        Methohd that imports here to avoid circular import issues.
+        """
+        from ..utils import phone_number_validator
+        return phone_number_validator
+    
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
-    description = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(validators=[_phone_number_validator()], max_length=16, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -197,29 +204,13 @@ class Organizer(User):
         
         super().save(*args, **kwargs)
     
-    # @property
-    # def total_revenue(self):
-    #     from .appointment import AppointmentStatus
-    #     """
-    #     Returns the sum of the services in all completed appointments for this organizer.
-    #     """
-    #     revenue = (
-    #         self.appointments_received.filter(status=AppointmentStatus.COMPLETED.value)
-    #         .annotate(price_sum=Sum('services__price'))
-    #         .aggregate(total=Sum('price_sum'))['total']
-    #     )
-    #     return float(revenue) if revenue else 0.0
-    
     
     def to_dict(self):
-        """
-        Returns a JSON-serializable dict representation of the review.
-        """
         base = super().to_dict()
         base.update({
             'name': self.name,
             'surname': self.surname,
             'description': self.description,
-            # 'total_revenue': self.total_revenue,
+            'phone_number': self.phone_number,
         })
         return base

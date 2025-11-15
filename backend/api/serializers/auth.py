@@ -67,41 +67,42 @@ class RegisterParticipantSerializer(UsernameValidationMixin, EmailValidationMixi
         return participant
 
 
-class RegisterOrganizerSerializer(UIDTokenValidationSerializer, OrganizerValidationMixin, UsernameValidationMixin, PasswordValidationMixin, serializers.Serializer):
+class RegisterOrganizerSerializer(UsernameValidationMixin, EmailValidationMixin, PasswordValidationMixin, PhoneNumberValidationMixin, serializers.Serializer):
     """
-    Organizer completes registration via invite link. Only sets username and password.
+    Register a participant. Sends a confirmation email.
+    Organizer must provide valid username and password
     """
-    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True)
+    username = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
     surname = serializers.CharField(required=True)
-    description = serializers.CharField(required=False)
+    phone_number = serializers.CharField(required=False)
 
     def validate(self, attrs):
-        attrs = self.validate_uid_token(attrs, target_key='organizer')  # Returns User object to 'organizer' key
-        attrs = self.validate_organizer(attrs, check_active=False)      # Changes User object in 'organizer' to be type Organizer
         attrs = self.validate_username_format(attrs)
         attrs = self.validate_username_unique(attrs)
-
-        if attrs['organizer'].is_active:
-            raise serializers.ValidationError('Account already registered.')
-
+        attrs = self.validate_email_unique(attrs)
+        attrs = self.validate_phone_number_format(attrs)
+        
         return attrs
-
+    
     def create(self, validated_data):
-        organizer = validated_data['organizer']
-        organizer.username = validated_data['username']
-        organizer.name = validated_data['name']
-        organizer.surname = validated_data['surname']
-        organizer.is_active = True
+        participant = Organizer(
+            email=validated_data['email'], 
+            username=validated_data['username'], 
+            name=validated_data['name'],
+            surname=validated_data['surname'],
+            is_active=False
+        )
 
-        if 'description' in validated_data:
-            organizer.description = validated_data['description']
+        if 'phone_number' in validated_data:
+            participant.phone_number = validated_data['phone_number']
 
-        organizer.set_password(validated_data['password'])
-        organizer.save()
+        participant.set_password(validated_data['password'])
+        participant.save()
 
-        return organizer
+        return participant
 
 
 class GetEmailFromTokenSerializer(UIDTokenValidationSerializer, serializers.Serializer):
@@ -117,7 +118,7 @@ class GetEmailFromTokenSerializer(UIDTokenValidationSerializer, serializers.Seri
         return {'email': user.email}
 
 
-class VerifyParticipantEmailSerializer(UIDTokenValidationSerializer):
+class VerifyUserEmailSerializer(UIDTokenValidationSerializer):
     """
     Handles token validations when a participant attempts to verify their account
     """

@@ -113,3 +113,152 @@
 - Test end-to-end flow
 - Add basic styling
 - Optional: add notification triggers for new events
+
+## **4. Implementation**
+
+Perfect — here’s a **clean, complete list of endpoints** your Tinder-for-Events app needs.
+I’ll group them by feature and clearly describe what each one should do.
+
+---
+
+# ⭐ **AUTH ENDPOINTS**
+
+### **POST /auth/register/**
+
+- Register a new user (participant or organizer).
+- Body includes role, username, email, password, and specific fields (name, surname…).
+
+### **POST /auth/login/**
+
+- Returns JWT access + refresh tokens.
+
+### **POST /auth/logout/**
+
+- Invalidates refresh token.
+
+### **GET /auth/me/**
+
+- Returns the logged-in user’s profile.
+
+---
+
+# ⭐ **PARTICIPANT ENDPOINTS**
+
+### **GET /participants/preferences/**
+
+- Get the participant’s category selections + budget range.
+
+### **PUT /participants/preferences/**
+
+- Update categories + budget (for the recommendation system).
+
+---
+
+# ⭐ **ORGANIZER ENDPOINTS**
+
+### **POST /organizers/events/**
+
+- Organizer creates an event.
+- After creation:
+
+  - Run AI moderation → set `approved=True/False`.
+
+### **GET /organizers/events/**
+
+- List all events created by the logged-in organizer.
+
+### **GET /organizers/events/<id>/**
+
+- Get full details of an event they own.
+
+### **PUT /organizers/events/<id>/**
+
+- Update event details (title, description, price, categories…).
+
+### **DELETE /organizers/events/<id>/**
+
+- Delete their event.
+
+---
+
+# ⭐ **EVENT ENDPOINTS**
+
+### **GET /events/**
+
+- Public list of events (only approved ones).
+
+### **GET /events/<id>/**
+
+- Get event details.
+
+### **GET /events/categories/**
+
+- Returns all event categories (for filters & preferences page).
+
+---
+
+# ⭐ **SWIPE ENDPOINTS**
+
+### **POST /swipes/**
+
+- Body: `{ event_id, liked: true/false }`
+- Creates or updates swipe.
+- Used when participant swipes left/right.
+
+### **GET /swipes/history/**
+
+- List of events the participant has swiped on (optional, but useful for debugging).
+
+---
+
+# ⭐ **RECOMMENDATION ENDPOINT**
+
+### **GET /recommendations/feed/**
+
+Returns personalized event feed based on:
+
+- participant’s categories
+- participant’s budget
+- excluding already-swiped events
+- sorted by relevance
+
+This is the Tinder-like event feed.
+
+---
+
+# 🎯 Summary of all endpoints you need
+
+### **Auth**
+
+- POST /auth/register/
+- POST /auth/login/
+- POST /auth/logout/
+- GET /auth/me/
+
+### **Participants**
+
+- GET /participants/preferences/
+- PUT /participants/preferences/
+
+### **Organizers**
+
+- POST /organizers/events/
+- GET /organizers/events/
+- GET /organizers/events/<id>/
+- PUT /organizers/events/<id>/
+- DELETE /organizers/events/<id>/
+
+### **Events**
+
+- GET /events/
+- GET /events/<id>/
+- GET /events/categories/
+
+### **Swipes**
+
+- POST /swipes/
+- GET /swipes/history/
+
+### **Recommendations**
+
+- GET /recommendations/feed/
