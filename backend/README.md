@@ -264,10 +264,10 @@ This is the Tinder-like event feed.
 - GET /organizers/events/<id>/ ✅
 - DELETE /organizers/events/<id>/ ✅
 
-### Public
+### Public ✅
 
 **Events**
 
-- GET /events/
-- GET /events/<id>/
+- GET /events/ ✅
+- GET /events/<id>/ ✅
 - GET /events/categories/ ✅
