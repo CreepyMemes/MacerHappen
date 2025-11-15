@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 from ..utils import IsOrganizerRole
@@ -25,12 +25,12 @@ from ..serializers import (
 )
 @api_view(["GET", "POST"])
 @permission_classes([IsOrganizerRole])
-@parser_classes([JSONParser])
+@parser_classes([JSONParser, MultiPartParser])
 def manage_organizer_events(request):
     """
     Organizer only:
     - GET: List all events for the authenticated organizer.
-    - POST: Create a new event.
+    - POST: Create a new event (supports multipart/form-data with picture).
     """
     if request.method == "GET":
         serializer = GetOrganizerEventsSerializer(data={}, context={"organizer": request.user})

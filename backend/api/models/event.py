@@ -8,7 +8,7 @@ class Event(models.Model):
     """
     def _get_event_image_path(instance, filename):
         """
-        Methohd that imports here to avoid circular import issues.
+        Method that imports here to avoid circular import issues.
         """
         from ..utils import get_image_path
         return get_image_path(instance, filename, 'event')
@@ -26,8 +26,7 @@ class Event(models.Model):
     # AI moderation: only approved events appear in feed
     approved = models.BooleanField(default=False)
     moderation_notes = models.TextField(blank=True, null=True)  # why approved/rejected
-
-
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

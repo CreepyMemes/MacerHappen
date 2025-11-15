@@ -61,6 +61,7 @@ class CreateOrganizerEventSerializer(OrganizerValidationMixin, CategoryValidatio
             description=description,
             price=validated_data["price"],
             date=validated_data["date"],
+            picture=picture,
             approved=True,  # already moderated
             moderation_notes=moderation_result["reason"],
         )

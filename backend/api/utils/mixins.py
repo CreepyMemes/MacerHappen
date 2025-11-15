@@ -288,12 +288,14 @@ class GetEventsMixin:
             "date": event.date,
             "categories": [c.id for c in event.category.all()],
             "approved": event.approved,
+            "picture": event.picture.url if event.picture else None,
         }
 
         if include_moderation:
             data["moderation_notes"] = event.moderation_notes
 
         return data
+
 
 class RecommendationMixin(GetEventsMixin):
     def _build_user_profile_text(self, participant):
