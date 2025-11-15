@@ -1,9 +1,13 @@
 from rest_framework import serializers
+from ..models import Swipe
 from ..utils import (
     ParticipantValidationMixin,
     CategoryValidationMixin,
+    ParticipantValidationMixin, 
+    SwipeValidationMixin, 
+    GetEventsMixin
 )
-from ..models import Participant
+
 
 class GetParticipantPreferencesSerializer(ParticipantValidationMixin, serializers.Serializer):
     """
@@ -51,3 +55,51 @@ class UpdateParticipantPreferencesSerializer(ParticipantValidationMixin, Categor
 
     def save(self, **kwargs):
         return self.update(self.validated_data["participant"], self.validated_data)
+    
+
+class CreateSwipeSerializer(ParticipantValidationMixin, SwipeValidationMixin, GetEventsMixin, serializers.Serializer):
+    """
+    Participant only: Create or update a swipe (like/dislike) on an event.
+    """
+    event_id = serializers.IntegerField(required=True)
+    liked = serializers.BooleanField(required=True)
+
+    def validate(self, attrs):
+        attrs = self.validate_participant(attrs)
+        attrs = self.validate_event_for_swipe(attrs)
+        return attrs
+
+    def create(self, validated_data):
+        participant = validated_data["participant"]
+        event = validated_data["event"]
+        liked = validated_data["liked"]
+
+        swipe, _ = Swipe.objects.update_or_create(
+            participant=participant,
+            event=event,
+            defaults={"liked": liked},
+        )
+        return swipe
+
+
+class GetSwipeHistorySerializer(ParticipantValidationMixin, serializers.Serializer):
+    """
+    Participant only: Get swipe history.
+    """
+    def validate(self, attrs):
+        attrs = self.validate_participant(attrs)
+        return attrs
+
+    def to_representation(self, validated_data):
+        participant = validated_data["participant"]
+        swipes = Swipe.objects.filter(participant=participant).select_related("event")
+        return {
+            "swipes": [
+                {
+                    "event_id": s.event_id,
+                    "liked": s.liked,
+                    "created_at": s.created_at,
+                }
+                for s in swipes
+            ]
+        }

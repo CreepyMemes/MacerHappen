@@ -7,8 +7,9 @@ from ..utils import IsParticipantRole
 from ..serializers.participant import (
     GetParticipantPreferencesSerializer,
     UpdateParticipantPreferencesSerializer,
+    CreateSwipeSerializer, 
+    GetSwipeHistorySerializer
 )
-
 @extend_schema(
     methods=['GET'],
     responses={200: GetParticipantPreferencesSerializer},
@@ -39,3 +40,39 @@ def manage_participant_preferences(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": "Preferences updated successfully."}, status=status.HTTP_200_OK)
+    
+
+@extend_schema(
+    methods=['POST'],
+    request=CreateSwipeSerializer,
+    responses={201: OpenApiResponse(description="Swipe recorded successfully."),},
+    description="Participant only: Create a swipe (like/dislike) for an event.",
+)
+@api_view(["POST"])
+@permission_classes([IsParticipantRole])
+@parser_classes([JSONParser])
+def create_swipe(request):
+    """
+    Participant only: Create a swipe (like/dislike) for an event.
+    """
+    serializer = CreateSwipeSerializer(data=request.data, context={"participant": request.user})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response({"detail": "Swipe recorded successfully."}, status=status.HTTP_201_CREATED)
+
+
+@extend_schema(
+    methods=['GET'],
+    responses={200: GetSwipeHistorySerializer},
+    description="Participant only:  Get current preferences (categories + budget).",
+)
+@api_view(["GET"])
+@permission_classes([IsParticipantRole])
+@parser_classes([JSONParser])
+def get_swipe_history(request):
+    """
+    Participant only: Get swipe history.
+    """
+    serializer = GetSwipeHistorySerializer(data={}, context={"participant": request.user})
+    serializer.is_valid(raise_exception=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

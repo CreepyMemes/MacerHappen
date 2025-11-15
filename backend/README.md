@@ -249,16 +249,16 @@ This is the Tinder-like event feed.
 
 **Swipes**
 
-- POST /swipes/
-- GET /swipes/history/
+- POST /participants/swipes/ ✅
+- GET /participants/swipes/history/ ✅
 
 **Recommendations** (⚠️ ai based)
 
-- GET /recommendations/feed/
+- GET /participants/recommendations/feed/
 
-### Organizers (⚠️ add ai moderation)
+### Organizers
 
-- POST /organizers/events/ ✅
+- POST /organizers/events/ (⚠️ add ai moderation)
 - GET /organizers/events/ ✅
 - PATCH /organizers/events/<id>/ ✅
 - GET /organizers/events/<id>/ ✅
@@ -268,6 +268,6 @@ This is the Tinder-like event feed.
 
 **Events**
 
-- GET /events/ ✅
-- GET /events/<id>/ ✅
-- GET /events/categories/ ✅
+- GET /public/events/ ✅
+- GET /public/events/<id>/ ✅
+- GET /public/events/categories/ ✅

@@ -135,8 +135,8 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 # DRF Spectacular settings for API documentation
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Barber Manager API",
-    "DESCRIPTION": "Manage barbershop scheduling, reviews, and users.",
+    "TITLE": "MacerHappen API",
+    "DESCRIPTION": "API documentation for the Tinder-for-Events application.",
     "VERSION": "1.0.0",
     "SWAGGER_UI_SETTINGS": '''{
         deepLinking: true,
