@@ -10,8 +10,8 @@ function Logo({ className, size = 'md', split, button }) {
     <>
       <Icon name="barbermanager" size={size} />
       <span className={styles.text}>
-        <span className={styles.light}>Barber</span>
-        <span className={styles.dark}>Manager</span>
+        <span className={styles.light}>Mace</span>
+        <span className={styles.dark}>Happen</span>
       </span>
     </>
   );

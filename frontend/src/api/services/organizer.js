@@ -2,6 +2,14 @@ import api from '@api';
 import { ENDPOINTS } from '@api/endpoints';
 
 /**
+ * Retrieves the current organizer's profile information.
+ */
+export async function getOrganizerProfile() {
+  const { data } = await api.instance.get(ENDPOINTS.organizer.profile);
+  return data;
+}
+
+/**
  * Organizer only: List all events for the authenticated organizer.
  */
 export async function getOrganizerEvents() {

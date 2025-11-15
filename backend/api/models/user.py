@@ -210,7 +210,6 @@ class Organizer(User):
         base.update({
             'name': self.name,
             'surname': self.surname,
-            'description': self.description,
             'phone_number': self.phone_number,
         })
         return base

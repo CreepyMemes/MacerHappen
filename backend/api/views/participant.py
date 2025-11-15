@@ -4,13 +4,53 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework import status
 from ..utils import IsParticipantRole
+
+
 from ..serializers.participant import (
+    GetParticipantProfileSerializer,
+    DeleteParticipantProfileSerializer,
     GetParticipantPreferencesSerializer,
     UpdateParticipantPreferencesSerializer,
     CreateSwipeSerializer, 
     GetSwipeHistorySerializer,
     GetRecommendationFeedSerializer
 )
+
+@extend_schema(
+    methods=["GET"],
+    responses={200: GetParticipantProfileSerializer},
+    description="Participant only: Get all related profile information for the authenticated participant.",
+)
+
+@extend_schema(
+    methods=["DELETE"],
+    responses={204: OpenApiResponse(description="Profile deleted successfully.")},
+    description="Participant only: Delete the account of the authenticated participant.",
+)
+@api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsParticipantRole])
+@parser_classes([JSONParser]) 
+def manage_participant_profile(request):
+    """
+    Participant only: Handles get, update and delete operations for the authenticated participant's profile.
+
+    - GET: Updates general profie information by the authenticated participant.
+    - DELETE: Deletes the account of the authenticated participant.
+    """
+    if request.method == 'GET':
+        serializer = GetParticipantProfileSerializer(data={}, context={'participant': request.user})
+        serializer.is_valid(raise_exception=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'DELETE':
+        serializer = DeleteParticipantProfileSerializer(data={}, context={'participant': request.user})
+        serializer.is_valid(raise_exception=True)
+        serializer.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
 @extend_schema(
     methods=['GET'],
     responses={200: GetParticipantPreferencesSerializer},

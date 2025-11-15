@@ -5,12 +5,50 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..utils import IsOrganizerRole
 from ..serializers import (
+    GetOrganizerProfileSerializer,
+    DeleteOrganizerProfileSerializer,
     GetOrganizerEventsSerializer,
     CreateOrganizerEventSerializer,
     GetOrganizerEventDetailSerializer,
     UpdateOrganizerEventSerializer,
     DeleteOrganizerEventSerializer,
 )
+
+@extend_schema(
+    methods=["GET"],
+    responses={200: GetOrganizerProfileSerializer},
+    description="Organizer only: Get all related profile information for the authenticated organizer.",
+)
+
+@extend_schema(
+    methods=["DELETE"],
+    responses={204: OpenApiResponse(description="Profile deleted successfully.")},
+    description="Organizer only: Delete the account of the authenticated organizer.",
+)
+@api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsOrganizerRole])
+@parser_classes([JSONParser]) 
+def manage_organizer_profile(request):
+    """
+    Organizer only: Handles get, update and delete operations for the authenticated organizer's profile.
+
+    - GET: Updates general profie information by the authenticated organizer.
+    - DELETE: Deletes the account of the authenticated organizer.
+    """
+    if request.method == 'GET':
+        serializer = GetOrganizerProfileSerializer(data={}, context={'organizer': request.user})
+        serializer.is_valid(raise_exception=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'DELETE':
+        serializer = DeleteOrganizerProfileSerializer(data={}, context={'organizer': request.user})
+        serializer.is_valid(raise_exception=True)
+        serializer.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
 
 @extend_schema(
     methods=['GET'],

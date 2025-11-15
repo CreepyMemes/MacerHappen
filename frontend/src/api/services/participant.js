@@ -2,6 +2,14 @@ import api from '@api';
 import { ENDPOINTS } from '@api/endpoints';
 
 /**
+ * Retrieves the current participant's profile information.
+ */
+export async function getParticipantProfile() {
+  const { data } = await api.instance.get(ENDPOINTS.participant.profile);
+  return data;
+}
+
+/**
  * Participant only: Get current preferences (categories + budget).
  */
 export async function getParticipantPreferences() {

@@ -8,13 +8,11 @@ function Footer() {
   return (
     <footer className={styles.footerArea}>
       <div className={styles.footer}>
-        <Logo size="sm" />
-
         <ul className={styles.links}>
           <li>
             <Button
               className={styles.button}
-              href="https://github.com/CreepyMemes/barbermanager"
+              href="https://github.com/CreepyMemes/macerhappen"
               size="md"
               color="animated" //
             >
@@ -25,7 +23,7 @@ function Footer() {
           <li>
             <Button
               className={styles.button}
-              href="https://github.com/CreepyMemes/barbermanager/tree/master/docs"
+              href="https://github.com/CreepyMemes/macerhappen/tree/master/docs"
               size="md"
               color="animated"
             >
@@ -45,7 +43,7 @@ function Footer() {
           </li>
         </ul>
 
-        <div className={styles.copyright}>&copy; {new Date().getFullYear()} CreepyMemes. All rights reserved.</div>
+        <div className={styles.copyright}>&copy; {new Date().getFullYear()} pistAcoppI. All rights reserved.</div>
       </div>
     </footer>
   );

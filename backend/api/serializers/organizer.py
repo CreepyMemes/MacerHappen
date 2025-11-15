@@ -1,11 +1,39 @@
 from rest_framework import serializers
+from ..models import Event
 from ..utils import (
+    GetOrganizersMixin,
     OrganizerValidationMixin,
     EventValidationMixin,
     CategoryValidationMixin,
     GetEventsMixin,
+    GetOrganizersMixin,
 )
-from ..models import Event
+
+
+class GetOrganizerProfileSerializer(OrganizerValidationMixin, GetOrganizersMixin, serializers.Serializer):
+    """
+    Returns all the public information related to the profile of a given organizer
+    """
+    def validate(self, attrs):
+        attrs = self.validate_organizer(attrs)
+        return attrs
+    
+    def to_representation(self, validated_data):
+        organizer = validated_data['organizer']
+        return {'profile': self.get_organizer_private(organizer)}
+
+
+class DeleteOrganizerProfileSerializer(OrganizerValidationMixin, serializers.Serializer):
+    """
+    Organizer only: Deletes a given existing organizer account.
+    """
+    def validate(self, attrs):
+        attrs = self.validate_organizer(attrs)
+        return attrs
+
+    def delete(self):
+        self.validated_data['organizer'].delete()
+
 
 class GetOrganizerEventsSerializer(OrganizerValidationMixin, GetEventsMixin, serializers.Serializer):
     """

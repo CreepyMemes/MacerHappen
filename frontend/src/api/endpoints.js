@@ -17,17 +17,16 @@ export const ENDPOINTS = {
     verifyEmail: (uidb64, token) => `/auth/verify/${uidb64}/${token}/`,
   },
 
-  // Admin Routes
-  // (Placeholder for future admin routes)
-
   // Organizers Routes
-  organizers: {
+  organizer: {
+    profile: '/organizers/profile/',
     events: '/organizers/events/',
     event: (eventId) => `/organizers/events/${eventId}/`,
   },
 
   // Participant Routes
   participant: {
+    profile: '/participants/profile/',
     preferences: '/participants/preferences/',
     feed: '/participants/feed/',
     swipes: '/participants/swipes/',

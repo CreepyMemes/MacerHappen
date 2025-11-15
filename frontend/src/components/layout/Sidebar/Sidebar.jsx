@@ -8,27 +8,21 @@ import Icon from '@components/common/Icon/Icon';
 import ProfileImage from '@components/ui/ProfileImage/ProfileImage';
 
 // Define role-based navigation
-const adminNav = [
-  { to: '/admin/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/admin/barbers', label: 'Barbers', icon: 'barber' },
-  { to: '/admin/clients', label: 'Clients', icon: 'client' },
-  { to: '/admin/appointments', label: 'Appointments', icon: 'appointment' },
-  { to: '/admin/settings', label: 'Settings', icon: 'settings' },
+
+const organizerNav = [
+  { to: '/organizer/dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { to: '/organizer/services', label: 'Services', icon: 'service' },
+  { to: '/organizer/appointments', label: 'Appointments', icon: 'appointment' },
+  { to: '/organizer/availabilities', label: 'Availabilities', icon: 'availability' },
+  { to: '/organizer/reviews', label: 'Reviews', icon: 'review' },
+  { to: '/organizer/settings', label: 'Settings', icon: 'settings' },
 ];
-const barberNav = [
-  { to: '/barber/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/barber/services', label: 'Services', icon: 'service' },
-  { to: '/barber/appointments', label: 'Appointments', icon: 'appointment' },
-  { to: '/barber/availabilities', label: 'Availabilities', icon: 'availability' },
-  { to: '/barber/reviews', label: 'Reviews', icon: 'review' },
-  { to: '/barber/settings', label: 'Settings', icon: 'settings' },
-];
-const clientNav = [
-  { to: '/client/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/client/barbers', label: 'Barbers', icon: 'barber' },
-  { to: '/client/appointments', label: 'Appointments', icon: 'appointment' },
-  { to: '/client/reviews', label: 'Reviews', icon: 'review' },
-  { to: '/client/settings', label: 'Settings', icon: 'settings' },
+const participantNav = [
+  { to: '/participant/dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { to: '/participant/barbers', label: 'Barbers', icon: 'barber' },
+  { to: '/participant/appointments', label: 'Appointments', icon: 'appointment' },
+  { to: '/participant/reviews', label: 'Reviews', icon: 'review' },
+  { to: '/participant/settings', label: 'Settings', icon: 'settings' },
 ];
 
 function Sidebar() {
@@ -38,9 +32,8 @@ function Sidebar() {
   // Get role specific nav items
   let navItems = [];
   if (!isFetchingProfile && profile) {
-    if (profile.role === 'ADMIN') navItems = adminNav;
-    else if (profile.role === 'BARBER') navItems = barberNav;
-    else if (profile.role === 'CLIENT') navItems = clientNav;
+    if (profile.role === 'ORGANIZER') navItems = organizerNav;
+    else if (profile.role === 'PARTICIPANT') navItems = participantNav;
   }
 
   return (

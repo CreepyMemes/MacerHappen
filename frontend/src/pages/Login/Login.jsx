@@ -62,7 +62,7 @@ function Login() {
       )}
 
       <Hero>
-        <Hero.Left>
+        {/* <Hero.Left>
           <SidePanel heading="Welcome back" subheading="Manage your barbershop with ease">
             <SidePanel.Inner>
               <div className={styles.description}>
@@ -92,15 +92,15 @@ function Login() {
               </Button>
             </SidePanel.Actions>
           </SidePanel>
-        </Hero.Left>
+        </Hero.Left> */}
 
         <Hero.Right background={'background'}>
           <Card className={styles.login}>
             <Form className={styles.loginForm} initialFields={initialFields} onSubmit={handleLogin}>
-              <h2 className={styles.label}>Login</h2>
+              <h2 className={styles.label}>Ciao Bentornato!</h2>
 
               <Input
-                label="Email or username"
+                label="Email o username"
                 name="identifier"
                 type="text"
                 autoComplete="username"
@@ -130,16 +130,16 @@ function Login() {
                 <span className={styles.line}>
                   {isLoggingIn ? (
                     <>
-                      <Spinner size={'sm'} /> Logging in...
+                      <Spinner size={'sm'} /> Caricamento...
                     </>
                   ) : (
-                    'Login'
+                    'Accedi'
                   )}
                 </span>
               </Button>
 
               <Button className={styles.forgotBtn} href="/reset-password" size="sm" color="link">
-                Forgot password?
+                Hai dimenticato la password?
               </Button>
 
               <Error />

@@ -2,7 +2,7 @@ import BarbermanagerIcon from './barbermanager.svg?react';
 import GithubIcon from './github.svg?react';
 import DashboardIcon from './dashboard.svg?react';
 import AppointmentIcon from './appointment.svg?react';
-import BarberIcon from './barber.svg?react';
+import OrganizerIcon from './organizer.svg?react';
 import ClientIcon from './client.svg?react';
 import SettingsIcon from './settings.svg?react';
 import DialIcon from './dial.svg?react';
@@ -45,7 +45,7 @@ const icons = {
   dashboard: DashboardIcon,
   barbermanager: BarbermanagerIcon,
   appointment: AppointmentIcon,
-  barber: BarberIcon,
+  organizer: OrganizerIcon,
   client: ClientIcon,
   settings: SettingsIcon,
   review: ReviewIcon,

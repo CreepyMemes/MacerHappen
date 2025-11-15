@@ -13,10 +13,7 @@ function SidePanel({ heading, children }) {
     <section className={styles.sidePanel}>
       <h1 className={styles.heading}>{heading}</h1>
 
-      <div className={styles.container}>
-        <Logo size="hg" split />
-        {inner}
-      </div>
+      <div className={styles.container}>{inner}</div>
 
       {actions}
     </section>

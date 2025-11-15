@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@hooks/useAuth';
-import styles from './RegisterClient.module.scss';
+import styles from './RegisterParticipant.module.scss';
 import api from '@api';
 
 import Spinner from '@components/common/Spinner/Spinner';
@@ -14,7 +14,7 @@ import Hero from '@components/ui/Hero/Hero';
 import SidePanel from '@components/ui/SidePanel/SidePanel';
 import Icon from '@components/common/Icon/Icon';
 
-function RegisterClient() {
+function RegisterParticipant() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -65,38 +65,6 @@ function RegisterClient() {
 
   return (
     <Hero>
-      <Hero.Left>
-        <SidePanel heading="Welcome to BarberManager" subheading="Manage your barbershop with ease">
-          <SidePanel.Inner>
-            <div className={styles.description}>
-              <h2>Book your next haircut effortlessly</h2>
-              <ul className={styles.features}>
-                <li>
-                  <Icon name="appointment" size="sm" />
-                  <p>Book appointments online in seconds.</p>
-                </li>
-                <li>
-                  <Icon name="availability" size="sm" />
-                  <p>Keep and update your personal profile.</p>
-                </li>
-                <li>
-                  <Icon name="calendar" size="sm" />
-                  <p>Track your appointment history easily.</p>
-                </li>
-              </ul>
-            </div>
-          </SidePanel.Inner>
-
-          <SidePanel.Actions>
-            <p className={styles.note}>Already have an account?</p>
-
-            <Button href="/login" color="secondary" size="md" width="content">
-              Login!
-            </Button>
-          </SidePanel.Actions>
-        </SidePanel>
-      </Hero.Left>
-
       <Hero.Right background={'background'}>
         <Card className={styles.register}>
           <Form
@@ -105,7 +73,7 @@ function RegisterClient() {
             onSubmit={handleRegister}
             validate={validate} //
           >
-            <h2 className={styles.label}>Sign up</h2>
+            <h2 className={styles.label}>Registrati come partecipante</h2>
 
             <div className={styles.inputGroup}>
               <Input label="Name" name="name" type="text" required size="md" />
@@ -126,7 +94,7 @@ function RegisterClient() {
               <span className={styles.line}>
                 {loading ? (
                   <>
-                    <Spinner size={'sm'} /> Signing up...
+                    <Spinner size={'sm'} /> Caricamento...
                   </>
                 ) : (
                   'Create Account'
@@ -142,4 +110,4 @@ function RegisterClient() {
   );
 }
 
-export default RegisterClient;
+export default RegisterParticipant;

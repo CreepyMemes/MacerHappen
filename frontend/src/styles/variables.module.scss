@@ -1,51 +1,52 @@
-// Main Colors
-$color-primary: #2b2b2a;
-$color-secondary: #e3e1dd;
-$color-tertiary: #c1bfba;
-$color-light: #f9f7f3;
-$color-accent: #585858;
-$color-muted: #a5a39a;
-$color-lighter: #454545;
-$color-main: #343432;
+// Main Colors (Macerata-inspired, warm red/terracotta)
+$color-primary: #8a150f; // brick/terracotta red
+$color-secondary: #f5eee5; // warm stone/cream
+$color-tertiary: #e1d3c4; // soft sandstone
+$color-light: #fdf7f0; // very light warm background
+$color-accent: #c27e33; // ochre accent
+$color-muted: #a5a39a; // muted gray
+$color-lighter: #a64545; // lighter red for hovers
+$color-main: #3e0f0f; // deep main red
+$color-black: #000000;
 
 // Icon colors
-$color-icon: #efdc9f;
-$color-rating: #fabb3d;
+$color-icon: #e7c48b; // warm sandstone
+$color-rating: #f2b544; // golden rating stars
 
 // Card colors
-$color-card: #f4f2ee;
-$color-card-darker: #efebe8;
-$color-card-dark: #efdc9f;
+$color-card: #fbf4ec; // light card background
+$color-card-darker: #f3e4d5; // slightly darker card
+$color-card-dark: #e7c48b; // highlighted card / emphasis
 
 // Borders/Shadows
-$border: #696968;
-$border-light: #bab8b8;
-$border-error: #fba4a4;
-$border-hover: #dcbb51;
+$border: #88654b; // warm taupe border
+$border-light: #e0c9b2; // lighter border
+$border-error: #f19a8b; // warm error border
+$border-hover: #d39b3b; // ochre hover border
 $border-radius: 8px;
 
 // Error colors
-$color-error-bg: #fae1e1;
-$color-error: #f44;
+$color-error-bg: #fce7e4; // soft red background
+$color-error: #d23b3b; // clear error red
 
 // Tag colors
-$color-tag-green-bg: #e9f9eb;
-$color-tag-green-text: #23863a;
-$color-tag-green-border: #aae3b7;
+$color-tag-green-bg: #eef5ea;
+$color-tag-green-text: #4f6b3c;
+$color-tag-green-border: #b9c9a4;
 
-$color-tag-yellow-bg: #faf2dc;
-$color-tag-yellow-text: #9d6b07;
-$color-tag-yellow-border: #f8cd6f;
+$color-tag-yellow-bg: #fdf5e3;
+$color-tag-yellow-text: #8b5a1f;
+$color-tag-yellow-border: #f0c47a;
 
-$color-tag-blue-bg: #e6f0fa;
-$color-tag-blue-text: #1765ad;
-$color-tag-blue-border: #85b6e2;
+$color-tag-blue-bg: #e7f0f7;
+$color-tag-blue-text: #285a7a;
+$color-tag-blue-border: #9bbdd4;
 
 $color-tag-red-bg: $color-error-bg;
 $color-tag-red-text: $color-error;
 $color-tag-red-border: $border-error;
 
-// Screen sizes
+// Screen sizes (unchanged)
 $bp-huge: 126.87em; //2030px
 $bp-large: 78.15em; // 1250px
 $bp-medium: 61.25em; // 980px

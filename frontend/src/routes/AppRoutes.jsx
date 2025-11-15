@@ -6,29 +6,26 @@ import Layout from '@components/layout/Layout/Layout';
 
 import Home from '@pages/Home/Home';
 import Login from '@pages/Login/Login';
-import RegisterClient from '@pages/RegisterClient/RegisterClient';
-import RegisterBarber from '@pages/RegisterBarber/RegisterBarber';
+import Register from '@pages/Register/Register';
+import RegisterParticipant from '@pages/RegisterParticipant/RegisterParticipant';
+import RegisterOrganizer from '@pages/RegisterOrganizer/RegisterOrganizer';
+
 import VerifyEmail from '@pages/VerifyEmail/VerifyEmail';
 import RequestPasswordReset from '@pages/RequestPasswordReset/RequestPasswordReset';
 import ConfirmPasswordReset from '@pages/ConfirmPasswordReset/ConfirmPasswordReset';
 import NotFound from '@pages/NotFound/NotFound';
 
-import Dashboard from '@pages/Dashboard/Dashboard';
-import Settings from '@pages/Settings/Settings';
+// import Dashboard from '@pages/Dashboard/Dashboard';
+// import Settings from '@pages/Settings/Settings';
 
-import AdminBarbers from '@pages/admin/AdminBarbers/AdminBarbers';
-import AdminClients from '@pages/admin/AdminClients/AdminClients';
-import AdminAppointments from '@pages/admin/AdminAppointments/AdminAppointments';
-import AdminAvailabilities from '@pages/admin/AdminAvailabilities/AdminAvailabilities';
+// import BarberServices from '@pages/barber/BarberServices/BarberServices';
+// import BarberAppointments from '@pages/barber/BarberAppointments/BarberAppointments';
+// import BarberAvailabilities from '@pages/barber/BarberAvailabilities/BarberAvailabilities';
+// import BarberReviews from '@pages/barber/BarberReviews/BarberReviews';
 
-import BarberServices from '@pages/barber/BarberServices/BarberServices';
-import BarberAppointments from '@pages/barber/BarberAppointments/BarberAppointments';
-import BarberAvailabilities from '@pages/barber/BarberAvailabilities/BarberAvailabilities';
-import BarberReviews from '@pages/barber/BarberReviews/BarberReviews';
-
-import ClientAppointments from '@pages/client/ClientAppointments/ClientAppointments';
-import ClientReviews from '@pages/client/ClientReviews/ClientReviews';
-import ClientBarbers from '@pages/client/ClientBarbers/ClientBarbers';
+// import ClientAppointments from '@pages/client/ClientAppointments/ClientAppointments';
+// import ClientReviews from '@pages/client/ClientReviews/ClientReviews';
+// import ClientBarbers from '@pages/client/ClientBarbers/ClientBarbers';
 
 // Helper for cleaner protected route declaration
 const protectedRoute = (element, role) => <ProtectedRoute role={role}>{element}</ProtectedRoute>;
@@ -40,8 +37,9 @@ function AppRoutes() {
         {/* Public pages (no need to be authenticated) */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register/" element={<RegisterClient />} />
-        <Route path="/register/:uidb64/:token" element={<RegisterBarber />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/register/participant" element={<RegisterParticipant />} />
+        <Route path="/register/organizer" element={<RegisterOrganizer />} />
         <Route path="/verify/:uidb64/:token" element={<VerifyEmail />} />
         <Route path="/reset-password" element={<RequestPasswordReset />} />
         <Route path="/reset-password/:uidb64/:token" element={<ConfirmPasswordReset />} />
@@ -51,23 +49,19 @@ function AppRoutes() {
         <Route path="settings" element={protectedRoute(<RoleRedirect />)} />
 
         {/* Role based pages */}
-        <Route path=":role/dashboard" element={protectedRoute(<Dashboard />)} />
-        <Route path=":role/settings" element={protectedRoute(<Settings />)} />
+        {/* <Route path=":role/dashboard" element={protectedRoute(<Dashboard />)} />
+        <Route path=":role/settings" element={protectedRoute(<Settings />)} /> */}
 
         {/* Unique role protected pages */}
-        <Route path="admin/barbers" element={protectedRoute(<AdminBarbers />, 'ADMIN')} />
-        <Route path="admin/clients" element={protectedRoute(<AdminClients />, 'ADMIN')} />
-        <Route path="admin/appointments" element={protectedRoute(<AdminAppointments />, 'ADMIN')} />
-        <Route path="admin/availabilities/barber/:barberId" element={protectedRoute(<AdminAvailabilities />, 'ADMIN')} />
 
-        <Route path="barber/services" element={protectedRoute(<BarberServices />, 'BARBER')} />
+        {/* <Route path="barber/services" element={protectedRoute(<BarberServices />, 'BARBER')} />
         <Route path="barber/appointments" element={protectedRoute(<BarberAppointments />, 'BARBER')} />
         <Route path="barber/availabilities" element={protectedRoute(<BarberAvailabilities />, 'BARBER')} />
         <Route path="barber/reviews" element={protectedRoute(<BarberReviews />, 'BARBER')} />
 
         <Route path="client/appointments" element={protectedRoute(<ClientAppointments />, 'CLIENT')} />
         <Route path="client/reviews" element={protectedRoute(<ClientReviews />, 'CLIENT')} />
-        <Route path="client/barbers" element={protectedRoute(<ClientBarbers />, 'CLIENT')} />
+        <Route path="client/barbers" element={protectedRoute(<ClientBarbers />, 'CLIENT')} /> */}
 
         {/* 404 page (this must be last) */}
         <Route path="*" element={<NotFound />} />

@@ -38,11 +38,11 @@ function Header() {
             {!isAuthenticated && (
               <>
                 <Button href="/login" size="md" color="transdark">
-                  Login
+                  Accedi
                 </Button>
 
-                <Button href="/register" size="md" color="secondary">
-                  Sign up
+                <Button href="/register/" size="md" color="secondary">
+                  Registrati
                 </Button>
               </>
             )}

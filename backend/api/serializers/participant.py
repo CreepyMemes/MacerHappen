@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ..models import Swipe
 from ..utils import (
+    GetParticipantsMixin,
     ParticipantValidationMixin,
     CategoryValidationMixin,
     ParticipantValidationMixin, 
@@ -8,6 +9,30 @@ from ..utils import (
     GetEventsMixin,
     RecommendationMixin
 )
+
+class GetParticipantProfileSerializer(ParticipantValidationMixin, GetParticipantsMixin, serializers.Serializer):
+    """
+    Returns all the public information related to the profile of a given participant
+    """
+    def validate(self, attrs):
+        attrs = self.validate_participant(attrs)
+        return attrs
+    
+    def to_representation(self, validated_data):
+        participant = validated_data['participant']
+        return {'profile': self.get_participant_private(participant)}
+
+
+class DeleteParticipantProfileSerializer(ParticipantValidationMixin, serializers.Serializer):
+    """
+    Participant only: Deletes a given existing participant account.
+    """
+    def validate(self, attrs):
+        attrs = self.validate_participant(attrs)
+        return attrs
+
+    def delete(self):
+        self.validated_data['organizer'].delete()
 
 
 class GetParticipantPreferencesSerializer(ParticipantValidationMixin, serializers.Serializer):

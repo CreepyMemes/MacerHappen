@@ -1,5 +1,6 @@
 from django.urls import path
 from ..views import (
+    manage_participant_profile,
     manage_participant_preferences,
     create_swipe,
     get_swipe_history,
@@ -9,6 +10,7 @@ from ..views import (
 
 urlpatterns = [
     # Participant profile management
+    path('profile/', manage_participant_profile, name='manage_participant_profile'),
     path('preferences/', manage_participant_preferences, name='manage_participant_preferences'),
 
     # Swipe actions

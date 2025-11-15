@@ -47,14 +47,11 @@ function AuthProvider({ children }) {
       setIsAuthenticated(true);
 
       // Fetch role specific profile
-      if (me.role === 'ADMIN') {
-        const { profile } = await api.admin.getAdminProfile();
+      if (me.role === 'ORGANIZER') {
+        const { profile } = await api.organizer.getOrganizerProfile();
         setProfile(profile);
-      } else if (me.role === 'BARBER') {
-        const { profile } = await api.barber.getBarberProfile();
-        setProfile(profile);
-      } else if (me.role === 'CLIENT') {
-        const { profile } = await api.client.getClientProfile();
+      } else if (me.role === 'PARTICIPANT') {
+        const { profile } = await api.participant.getParticipantProfile();
         setProfile(profile);
       }
     } catch (error) {

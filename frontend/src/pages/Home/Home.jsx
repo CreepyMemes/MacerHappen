@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@hooks/useAuth';
 import styles from './Home.module.scss';
-
 import Spinner from '@components/common/Spinner/Spinner';
 import Button from '@components/common/Button/Button';
 import Hero from '@components/ui/Hero/Hero';
@@ -13,58 +12,63 @@ function Home() {
   const { isAuthenticated, isLoggingOut } = useAuth();
   const navigate = useNavigate();
 
-  /**
-   * On authentication state change, redirect authenticated users away from home.
-   */
+  // Utenti autenticati vanno direttamente alla dashboard
   useEffect(() => {
-    if (!isLoggingOut && isAuthenticated) navigate('/dashboard', { replace: true });
+    if (!isLoggingOut && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
   }, [isAuthenticated, isLoggingOut, navigate]);
 
-  // Don't show landing if redirecting
+  // Non mostrare la landing durante il redirect
   if (isLoggingOut || isAuthenticated) return <Spinner />;
 
   return (
     <Hero>
       <Hero.Left>
-        <SidePanel heading="Barbershop management platform">
+        <SidePanel heading="MacerHappen" subheading="Scegli come vuoi vivere Macerata">
           <SidePanel.Inner>
-            <ul className={styles.features}>
-              <li>
-                <span className={styles.featureTitle}>
-                  <Icon name="appointment" size="sm" />
-                  <p>Effortless Appointments</p>
-                </span>
-                <span>Let customers book themselves. Manage your schedule with ease.</span>
-              </li>
+            <div className={styles.description}>
+              <h2>La piattaforma per scoprire e vivere gli eventi a Macerata</h2>
+              <p className={styles.lead}>
+                Tutto quello che succede in città in un unico posto: concerti, aperitivi, mostre, serate universitarie e altro
+                ancora. Trova e organizza le tue uscite in pochi minuti.
+              </p>
 
-              <li>
-                <span className={styles.featureTitle}>
-                  <Icon name="client" size="sm" />
-                  <p>Customer Relationship</p>
-                </span>
-                <span>Track client history, notes, and preferences for unbeatable service.</span>
-              </li>
-
-              <li>
-                <span className={styles.featureTitle}>
-                  <Icon name="review" size="sm" /> <p>Reviews & Growth</p>
-                </span>
-                <span>Collect feedback, drive loyalty and get insights to grow your business.</span>
-              </li>
-            </ul>
+              <ul className={styles.features}>
+                <li>
+                  <Icon name="map" size="sm" />
+                  <p>
+                    <strong>Scopri cosa succede:</strong> esplora la mappa o la lista degli eventi filtrando per data, zona e
+                    categoria.
+                  </p>
+                </li>
+                <li>
+                  <Icon name="ticket" size="sm" />
+                  <p>
+                    <strong>Vedi i dettagli:</strong> prezzo, orari, location e tutte le info pratiche in un colpo d&apos;occhio.
+                  </p>
+                </li>
+                <li>
+                  <Icon name="heart" size="sm" />
+                  <p>
+                    <strong>Segna ciò che ti piace:</strong> salva gli eventi che ti interessano e organizza le tue serate in
+                    pochi tap.
+                  </p>
+                </li>
+              </ul>
+            </div>
           </SidePanel.Inner>
 
           <SidePanel.Actions>
-            <Button href="/register" size="lg" color="secondary">
-              Get started
+            <p className={styles.note}>Hai già un account?</p>
+            <Button href="/login" color="secondary" size="md" width="content">
+              Accedi
             </Button>
-
-            <p className={styles.note}>No credit card required. Cancel anytime.</p>
           </SidePanel.Actions>
         </SidePanel>
       </Hero.Left>
 
-      <Hero.Right background={'splash'}></Hero.Right>
+      <Hero.Right background="splash" />
     </Hero>
   );
 }

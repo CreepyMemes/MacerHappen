@@ -297,6 +297,90 @@ class GetEventsMixin:
         return data
 
 
+class GetOrganizersMixin:
+    """
+    Mixin for retrieving and serializing Organizer models.
+    """
+    _PUBLIC_EXCLUDES = ['email', 'is_active']
+
+    def get_organizers_queryset(self, show_all=False):
+        """
+        Returns Organizer queryset in the system.
+        If show_all is True, returns all organizers.
+        """
+        from ..models import Organizer
+        return Organizer.objects.filter(is_active=True) if not show_all else Organizer.objects.all()
+    
+    def get_organizer_public(self, organizer):
+        """
+        Returns only the public data for a single organizer.
+        """
+        data = organizer.to_dict().copy()
+        for field in self._PUBLIC_EXCLUDES:
+            data.pop(field, None)
+        return data
+    
+    def get_organizer_private(self, organizer):
+        """
+        Returns all data for a single organizer.
+        """
+        return organizer.to_dict()
+    
+    def get_organizers_private(self, show_all=False):
+        """
+        Returns all organizers as full dicts (all or only active).
+        """
+        return [self.get_organizer_private(b) for b in self.get_organizers_queryset(show_all=show_all)]
+    
+    def get_organizers_public(self):
+        """
+        Returns all active organizers as public dicts.
+        """
+        return [self.get_organizer_public(b) for b in self.get_organizers_queryset()]
+    
+
+class GetParticipantsMixin:
+    """
+    Mixin for retrieving and serializing Participant models.
+    """
+    _PUBLIC_EXCLUDES = ['email', 'is_active']
+
+    def get_participants_queryset(self, show_all=False):
+        """
+        Returns Participant queryset in the system.
+        If show_all is True, returns all participants.
+        """
+        from ..models import Participant
+        return Participant.objects.filter(is_active=True) if not show_all else Participant.objects.all()
+    
+    def get_participant_public(self, participant):
+        """
+        Returns only the public data for a single participant.
+        """
+        data = participant.to_dict().copy()
+        for field in self._PUBLIC_EXCLUDES:
+            data.pop(field, None)
+        return data
+    
+    def get_participant_private(self, participant):
+        """
+        Returns all data for a single participant.
+        """
+        return participant.to_dict()
+    
+    def get_participants_private(self, show_all=False):
+        """
+        Returns all participants as full dicts (all or only active).
+        """
+        return [self.get_participant_private(b) for b in self.get_participants_queryset(show_all=show_all)]
+    
+    def get_participants_public(self):
+        """
+        Returns all active participants as public dicts.
+        """
+        return [self.get_participant_public(b) for b in self.get_participants_queryset()]
+    
+
 class RecommendationMixin(GetEventsMixin):
     def _build_user_profile_text(self, participant):
         """ 
