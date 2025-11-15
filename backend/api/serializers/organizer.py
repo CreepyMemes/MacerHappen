@@ -36,23 +36,33 @@ class CreateOrganizerEventSerializer(OrganizerValidationMixin, CategoryValidatio
         return attrs
 
     def create(self, validated_data):
+        from ..utils import moderate_event_content
+
         organizer = validated_data["organizer"]
         categories = validated_data["categories"]
+        title = validated_data["title"]
+        description = validated_data["description"]
 
+        # Run AI moderation BEFORE creating
+        moderation_result = moderate_event_content(title=title, description=description)
+
+        if not moderation_result["approved"]:
+            # surface this as a validation error (HTTP 400)
+            raise serializers.ValidationError({
+                "detail": f"Event rejected by moderation: {moderation_result['reason']}"
+            })
+
+        # Only create if approved
         event = Event.objects.create(
             organizer=organizer,
-            title=validated_data["title"],
-            description=validated_data["description"],
+            title=title,
+            description=description,
             price=validated_data["price"],
             date=validated_data["date"],
-            approved=False,  # initial, AI will decide
+            approved=True,  # already moderated
+            moderation_notes=moderation_result["reason"],
         )
         event.category.set(categories)
-
-        # TODO: call AI moderation here, set event.approved accordingly
-        # event.approved = run_moderation(event)
-        # event.save()
-
         return event
 
 
@@ -67,7 +77,7 @@ class GetOrganizerEventDetailSerializer(OrganizerValidationMixin, EventValidatio
 
     def to_representation(self, validated_data):
         event = validated_data["event"]
-        return {"event": self._event_to_dict(event)}
+        return {"event": self._event_to_dict(event, include_moderation=True)}
 
 
 class UpdateOrganizerEventSerializer(OrganizerValidationMixin, EventValidationMixin, CategoryValidationMixin, GetEventsMixin, serializers.Serializer):

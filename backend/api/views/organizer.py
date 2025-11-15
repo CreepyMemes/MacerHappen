@@ -41,7 +41,7 @@ def manage_organizer_events(request):
         serializer = CreateOrganizerEventSerializer(data=request.data, context={"organizer": request.user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": "Event created successfully."}, status=status.HTTP_201_CREATED)
+        return Response({"detail": "Event created and moderated successfully."}, status=status.HTTP_201_CREATED)
 
 @extend_schema(
     methods=['GET'],

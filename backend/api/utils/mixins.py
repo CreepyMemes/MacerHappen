@@ -267,35 +267,33 @@ class GetCategoriesMixin:
 
 
 class GetEventsMixin:
-    """
-    Helpers to serialize events.
-    """
     def get_events_for_organizer(self, organizer_id):
         from ..models import Event
-
         events = Event.objects.filter(organizer_id=organizer_id).order_by("-created_at")
-        return [self._event_to_dict(e) for e in events]
+        return [self._event_to_dict(e, include_moderation=True) for e in events]
 
     def get_public_events(self):
         from ..models import Event
-
         events = Event.objects.filter(approved=True).order_by("date")
-        return [self._event_to_dict(e) for e in events]
+        # no moderation notes for public
+        return [self._event_to_dict(e, include_moderation=False) for e in events]
 
-    def _event_to_dict(self, event):
-        return {
+    def _event_to_dict(self, event, include_moderation=False):
+        data = {
             "id": event.id,
             "organizer_id": event.organizer_id,
             "title": event.title,
             "description": event.description,
             "price": float(event.price),
             "date": event.date,
-            "approved": event.approved,
             "categories": [c.id for c in event.category.all()],
+            "approved": event.approved,
         }
-    
-import logging
-logger = logging.getLogger(__name__)
+
+        if include_moderation:
+            data["moderation_notes"] = event.moderation_notes
+
+        return data
 
 class RecommendationMixin(GetEventsMixin):
     def _build_user_profile_text(self, participant):
@@ -316,7 +314,6 @@ class RecommendationMixin(GetEventsMixin):
             f"Previously liked events: {liked_titles or 'none yet'}."
         )
     
-        logger.warning("LLM user profile text for participant_id=%s:\n%s", participant.id, text)
         return text
 
     def _get_candidate_events(self, participant):

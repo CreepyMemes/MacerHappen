@@ -25,6 +25,8 @@ class Event(models.Model):
 
     # AI moderation: only approved events appear in feed
     approved = models.BooleanField(default=False)
+    moderation_notes = models.TextField(blank=True, null=True)  # why approved/rejected
+
 
     created_at = models.DateTimeField(auto_now_add=True)
 
