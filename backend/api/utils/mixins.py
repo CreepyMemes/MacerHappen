@@ -258,7 +258,8 @@ class SwipeValidationMixin:
 
         attrs["event"] = event
         return attrs
-    
+
+
 class GetCategoriesMixin:
     def get_categories_public(self):
         from ..models import Category
@@ -277,7 +278,7 @@ class GetEventsMixin:
 
     def get_public_events(self):
         from ..models import Event
-        
+
         events = Event.objects.filter(approved=True).order_by("date")
         return [self._event_to_dict(e) for e in events]
 
@@ -292,3 +293,75 @@ class GetEventsMixin:
             "approved": event.approved,
             "categories": [c.id for c in event.category.all()],
         }
+    
+import logging
+logger = logging.getLogger(__name__)
+
+class RecommendationMixin(GetEventsMixin):
+    def _build_user_profile_text(self, participant):
+        """ 
+        Build a textual profile of the participant for LLM input.
+        """
+        from ..models import Swipe
+
+        categories = ", ".join(participant.categories.values_list("name", flat=True))
+        liked_swipes = (
+            Swipe.objects.filter(participant=participant, liked=True).select_related("event")
+        )
+        liked_titles = ", ".join(s.event.title for s in liked_swipes[:10])
+
+        text =  (
+            f"User prefers categories: {categories or 'none specified'}.\n"
+            f"Budget available: {participant.budget}.\n"
+            f"Previously liked events: {liked_titles or 'none yet'}."
+        )
+    
+        logger.warning("LLM user profile text for participant_id=%s:\n%s", participant.id, text)
+        return text
+
+    def _get_candidate_events(self, participant):
+        """
+        Fetch events that match participant preferences and budget, excluding swiped events.
+        """
+        from ..models import Event, Swipe
+
+        swiped_ids = Swipe.objects.filter(participant=participant).values_list("event_id", flat=True)
+        events = (
+            Event.objects.filter(approved=True)
+            .exclude(id__in=swiped_ids)
+            .filter(price__lte=participant.budget)
+            .filter(category__in=participant.categories.all())
+            .distinct()
+        )
+        return list(events)
+
+    def get_recommendations(self, participant):
+        """
+        Get a list of recommended events for the participant, ranked by relevance using an LLM.
+        """
+        from .openai_utils import rank_events_with_llm
+
+        candidates = self._get_candidate_events(participant)
+        if not candidates:
+            return []
+
+        events_payload = [
+            {
+                "id": e.id,
+                "title": e.title,
+                "description": e.description[:300],
+                "price": float(e.price),
+                "categories": list(e.category.values_list("name", flat=True)),
+            }
+            for e in candidates
+        ]
+
+        user_profile = self._build_user_profile_text(participant)
+        ranked_ids = rank_events_with_llm(user_profile, events_payload)
+
+        id_to_event = {e.id: e for e in candidates}
+        ranked_events = [id_to_event[eid] for eid in ranked_ids if eid in id_to_event]
+        remaining = [e for e in candidates if e.id not in ranked_ids]
+        ranked_events.extend(remaining)
+
+        return [self._event_to_dict(e) for e in ranked_events]

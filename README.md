@@ -81,6 +81,10 @@ EMAIL_HOST='smtp.server.com'
 EMAIL_PORT=587
 EMAIL_HOST_USER='your.stmp@email.com'
 EMAIL_HOST_PASSWORD='your stmp pass here'
+
+# External LLM API Key
+OPENROUTER_API_KEY=sk-or-v1-your-key-goes-here
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
 ```
 
 #### Dependencies

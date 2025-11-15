@@ -8,7 +8,8 @@ from ..serializers.participant import (
     GetParticipantPreferencesSerializer,
     UpdateParticipantPreferencesSerializer,
     CreateSwipeSerializer, 
-    GetSwipeHistorySerializer
+    GetSwipeHistorySerializer,
+    GetRecommendationFeedSerializer
 )
 @extend_schema(
     methods=['GET'],
@@ -74,5 +75,23 @@ def get_swipe_history(request):
     Participant only: Get swipe history.
     """
     serializer = GetSwipeHistorySerializer(data={}, context={"participant": request.user})
+    serializer.is_valid(raise_exception=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    responses={200: GetRecommendationFeedSerializer},
+    description="Participant only: Get personalized event feed."
+)
+@api_view(["GET"])
+@permission_classes([IsParticipantRole])
+@parser_classes([JSONParser])
+def get_recommendation_feed(request):
+    """
+    Participant only: Get personalized event feed (AI-ranked).
+    """
+    serializer = GetRecommendationFeedSerializer(
+        data={}, context={"participant": request.user}
+    )
     serializer.is_valid(raise_exception=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

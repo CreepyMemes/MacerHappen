@@ -5,7 +5,8 @@ from ..utils import (
     CategoryValidationMixin,
     ParticipantValidationMixin, 
     SwipeValidationMixin, 
-    GetEventsMixin
+    GetEventsMixin,
+    RecommendationMixin
 )
 
 
@@ -103,3 +104,18 @@ class GetSwipeHistorySerializer(ParticipantValidationMixin, serializers.Serializ
                 for s in swipes
             ]
         }
+    
+
+class GetRecommendationFeedSerializer(ParticipantValidationMixin, RecommendationMixin, serializers.Serializer):
+    """
+    Participant only: Get personalized event feed.
+    """
+    def validate(self, attrs):
+        attrs = self.validate_participant(attrs)
+        return attrs
+
+    def to_representation(self, validated_data):
+        participant = validated_data["participant"]
+        events = self.get_recommendations(participant)
+        return {"events": events}
+    
