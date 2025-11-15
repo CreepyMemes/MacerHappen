@@ -21,18 +21,37 @@ function SwipeCard({ event, onSwipe, disabled, categoryMap = {} }) {
 
   const startDrag = (e) => {
     if (disabled || isAnimatingOut) return;
+
+    // Only react to primary mouse button, ignore right/middle clicks
+    if (e.type === 'mousedown' && e.button !== 0) return;
+
     setIsDragging(true);
     setDragStartX(getPointerX(e));
   };
 
   const moveDrag = (e) => {
     if (!isDragging || disabled || isAnimatingOut) return;
+
+    // For mousemove, only drag while primary button is still held
+    if (e.type === 'mousemove' && e.buttons !== 1) {
+      return;
+    }
+
     const currentX = getPointerX(e);
     setDragDeltaX(currentX - dragStartX);
-    if (e.preventDefault) e.preventDefault(); // avoid scrolling while swiping
+
+    // Avoid scrolling while swiping on touch
+    if (e.cancelable && e.preventDefault) {
+      e.preventDefault();
+    }
   };
 
-  const endDrag = () => {
+  const endDrag = (e) => {
+    // If this is a mouseup and not primary button, ignore
+    if (e && e.type === 'mouseup' && e.button !== 0) {
+      return;
+    }
+
     if (!isDragging || disabled || isAnimatingOut) {
       setIsDragging(false);
       setDragDeltaX(0);
@@ -46,7 +65,6 @@ function SwipeCard({ event, onSwipe, disabled, categoryMap = {} }) {
     } else {
       setDragDeltaX(0); // snap back
     }
-
     setIsDragging(false);
   };
 
@@ -120,7 +138,13 @@ function SwipeCard({ event, onSwipe, disabled, categoryMap = {} }) {
 
         {event.picture && (
           <div className={styles.imageWrapper}>
-            <img src={event.picture} alt={event.title} className={styles.image} />
+            <img
+              src={event.picture}
+              alt={event.title}
+              className={styles.image}
+              draggable="false" // ⬅️ prevent native drag
+              onDragStart={(e) => e.preventDefault()} // safety net
+            />
           </div>
         )}
 
@@ -144,7 +168,7 @@ function SwipeCard({ event, onSwipe, disabled, categoryMap = {} }) {
             </div>
           )}
 
-          {/* UPDATED: event.categories is [1,2,...], use categoryMap[id] */}
+          {/* event.categories is [1,2,...], use categoryMap[id] */}
           {Array.isArray(event.categories) && event.categories.length > 0 && (
             <div className={styles.categories}>
               {event.categories.map((id) => (

@@ -109,12 +109,12 @@ function ParticipantDashboard() {
     <div className={styles.participantDashboard}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Welcome{profile?.name ? `, ${profile.name}` : ''}!</h1>
-          <p className={styles.subtitle}>Swipe through personalized events. Right to save, left to skip.</p>
+          <h1 className={styles.title}>Benvenuto{profile?.name ? `, ${profile.name}` : ''}!</h1>
+          <p className={styles.subtitle}>Scorri tra gli eventi. A destra per salvare, a sinistra per saltare.</p>
         </div>
         {profile && (
           <div className={styles.preferences}>
-            <span className={styles.prefLabel}>Your budget:</span>
+            <span className={styles.prefLabel}>Il tuo budget:</span>
             <span className={styles.prefValue}>{profile.budget ? `€${profile.budget}` : 'Not set'}</span>
           </div>
         )}
@@ -140,10 +140,10 @@ function ParticipantDashboard() {
           <div className={styles.emptyState}>
             <h2 className={styles.emptyTitle}>No more events</h2>
             <p className={styles.emptyText}>
-              You&apos;ve reached the end of your recommendations. Adjust your preferences or reload the feed.
+              Hai raggiunto la fine dei tuoi suggerimenti. Modifica le tue preferenze o ricarica il feed.
             </p>
             <button type="button" className={styles.reloadButton} onClick={fetchFeed}>
-              Reload feed
+              Ricarica feed
             </button>
           </div>
         )}

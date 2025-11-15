@@ -114,6 +114,12 @@ To create an admin user:
 python manage.py createsuperuser
 ```
 
+#### Create mockup data through scripts
+
+```bash
+python manage.py create_events
+```
+
 #### Run tests
 
 To simply run all tests:

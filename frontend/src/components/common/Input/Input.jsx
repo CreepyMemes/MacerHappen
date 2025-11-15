@@ -14,6 +14,7 @@ function Input({
   placeholder,
   disabled,
   required,
+  className,
 
   // For Standard input
   autoComplete,
@@ -36,7 +37,7 @@ function Input({
   const { fields, handleChange } = useForm();
 
   // Get all style classes into a string
-  const className = [styles.input, styles[size]].join(' ');
+  const computedClassName = [className, styles.input, styles[size]].join(' ');
 
   // Dropdown & Checkbox options state
   const [selectOptions, setSelectOptions] = useState([]);
@@ -331,7 +332,7 @@ function Input({
       {label}
       <span className={styles.inputWrapper}>
         <input
-          className={className}
+          className={computedClassName}
           name={name}
           type={inputType}
           min={min}

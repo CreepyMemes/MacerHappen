@@ -3,7 +3,6 @@ import { useAuth } from '@hooks/useAuth';
 import { isAnyFieldSet } from '@utils/utils';
 import styles from './ParticipantSettings.module.scss';
 import api from '@api';
-
 import StatCard from '@components/ui/StatCard/StatCard';
 import Form from '@components/common/Form/Form';
 import Input from '@components/common/Input/Input';
@@ -16,9 +15,14 @@ import Error from '@components/common/Error/Error';
 
 function ParticipantSettings() {
   const { profile, setProfile, logout } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false); // Used to disable the update profile button
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
+  // Preferences state
+  const [preferences, setPreferences] = useState(null);
+  const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
+  const [isUpdatingPreferences, setIsUpdatingPreferences] = useState(false);
 
   // Popup states
   const [uploadPicturePopup, setUploadPicturePopup] = useState(false);
@@ -26,11 +30,10 @@ function ParticipantSettings() {
   const [deleteProfilePopup, setDeleteProfilePopup] = useState(false);
 
   /**
-   * Defines fetching latest profile data
+   * Fetch latest profile data
    */
   const fetchProfile = useCallback(async () => {
     setIsLoading(true);
-
     try {
       const { profile } = await api.client.getParticipantProfile();
       setProfile(profile);
@@ -40,11 +43,25 @@ function ParticipantSettings() {
   }, [setProfile]);
 
   /**
-   *  Fetches on mount to keep profile data always up to date
+   * Fetch participant preferences (categories + budget)
+   */
+  const fetchPreferences = useCallback(async () => {
+    setIsLoadingPreferences(true);
+    try {
+      const { preferences } = await api.participant.getParticipantPreferences();
+      setPreferences(preferences);
+    } finally {
+      setIsLoadingPreferences(false);
+    }
+  }, []);
+
+  /**
+   *  Fetches on mount to keep data always up to date
    */
   useEffect(() => {
     fetchProfile();
-  }, [fetchProfile]);
+    fetchPreferences();
+  }, [fetchProfile, fetchPreferences]);
 
   // While fetching latest profile data show loading spinner
   if (isLoading) return <Spinner />;
@@ -71,7 +88,7 @@ function ParticipantSettings() {
   };
 
   /**
-   * Handles deleting a new profile picture
+   * Handles deleting a profile picture
    */
   const handleDeletePicture = async () => {
     await api.image.deleteProfileImage();
@@ -80,7 +97,7 @@ function ParticipantSettings() {
   };
 
   /**
-   * Handles deleting a new profile picture
+   * Handles deleting profile
    */
   const handleDeleteProfile = async () => {
     await api.client.deleteParticipantProfile();
@@ -109,18 +126,57 @@ function ParticipantSettings() {
    */
   const handleUpdateProfile = async ({ username, name, surname, phone_number }) => {
     setIsUpdatingProfile(true);
-
     const payload = {};
     if (username && username.trim() !== '') payload.username = username.trim();
     if (name && name.trim() !== '') payload.name = name.trim();
     if (surname && surname.trim() !== '') payload.surname = surname.trim();
     if (phone_number && phone_number.trim() !== '') payload.phone_number = phone_number.trim();
-
     try {
       await api.client.updateParticipantProfile(payload);
       await fetchProfile(); // Refresh profile after update
     } finally {
       setIsUpdatingProfile(false);
+    }
+  };
+
+  /**
+   * Validate at least one preference field is provided
+   */
+  const validateUpdatePreferences = ({ category_ids, budget }) => {
+    const any = isAnyFieldSet({ category_ids, budget }, 'Provide at least one field to update: Categories or Budget.');
+    return any; // isAnyFieldSet returns string error or undefined
+  };
+
+  /**
+   * Handles form submission for updating preferences
+   * category_ids comes in as comma-separated string, convert to number[]
+   */
+  const handleUpdatePreferences = async ({ category_ids, budget }) => {
+    setIsUpdatingPreferences(true);
+
+    const payload = {};
+
+    // Parse category_ids (string like "1,2,3") to number[]
+    if (category_ids && category_ids.trim() !== '') {
+      payload.category_ids = category_ids
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean)
+        .map((id) => Number(id))
+        .filter((n) => !Number.isNaN(n));
+    }
+
+    // Normalize budget
+    if (budget !== undefined && String(budget).trim() !== '') {
+      const numericBudget = Number(budget);
+      payload.budget = Number.isNaN(numericBudget) ? budget : numericBudget;
+    }
+
+    try {
+      await api.participant.updateParticipantPreferences(payload);
+      await fetchPreferences(); // Refresh preferences after update
+    } finally {
+      setIsUpdatingPreferences(false);
     }
   };
 
@@ -132,26 +188,18 @@ function ParticipantSettings() {
           {/* Profile Picture Management */}
           <section className={styles.profileImageSection}>
             <ProfileImage src={profile.profile_image} size="15rem" />
-
             <div className={styles.imageAction}>
-              <Button
-                className={styles.actionBtn}
-                type="button"
-                color="primary"
-                size="md"
-                onClick={openUploadPicturePopup} //
-              >
+              <Button className={styles.actionBtn} type="button" color="primary" size="md" onClick={openUploadPicturePopup}>
                 <Icon name="plus" size="ty" />
                 <span>Upload picture</span>
               </Button>
-
               <Button
                 className={styles.actionBtn}
                 type="button"
                 color="translight"
                 autoIconInvert
                 size="md"
-                onClick={openDeletePicturePopup} //
+                onClick={openDeletePicturePopup}
               >
                 <Icon name="trash" size="ty" black />
                 <span>Delete picture</span>
@@ -165,10 +213,11 @@ function ParticipantSettings() {
               className={styles.updateProfileForm}
               initialFields={{ username: '', name: '', surname: '', phone_number: '' }}
               onSubmit={handleUpdateProfile}
-              validate={validateUpdateProfile} //
+              validate={validateUpdateProfile}
             >
               <div className={styles.inputGroup}>
                 <Input
+                  className={styles.input}
                   label="Username"
                   name="username"
                   type="text"
@@ -177,6 +226,7 @@ function ParticipantSettings() {
                   disabled={isUpdatingProfile}
                 />
                 <Input
+                  className={styles.input}
                   label="Phone Number"
                   name="phone_number"
                   type="tel"
@@ -185,18 +235,18 @@ function ParticipantSettings() {
                   disabled={isUpdatingProfile}
                 />
               </div>
-
               <div className={styles.inputGroup}>
                 <Input
+                  className={styles.input}
                   label="Name"
                   name="name"
                   type="text"
                   placeholder={profile.name}
                   size="md"
-                  disabled={isUpdatingProfile} //
+                  disabled={isUpdatingProfile}
                 />
-
                 <Input
+                  className={styles.input}
                   label="Surname"
                   name="surname"
                   type="text"
@@ -205,15 +255,7 @@ function ParticipantSettings() {
                   disabled={isUpdatingProfile}
                 />
               </div>
-
-              <Button
-                className={styles.saveBtn}
-                type="submit"
-                size="md"
-                color="primary"
-                disabled={isUpdatingProfile}
-                wide //
-              >
+              <Button className={styles.saveBtn} type="submit" size="md" color="primary" disabled={isUpdatingProfile} wide>
                 <span className={styles.line}>
                   {isUpdatingProfile ? (
                     <>
@@ -224,15 +266,65 @@ function ParticipantSettings() {
                   )}
                 </span>
               </Button>
-
               <Error />
             </Form>
           </section>
         </StatCard>
 
+        {/* Preferences Update Card */}
+        <StatCard icon="settings" label="Preferences">
+          <section className={styles.updatePreferencesSection}>
+            {isLoadingPreferences ? (
+              <Spinner />
+            ) : (
+              <Form
+                className={styles.updatePreferencesForm}
+                initialFields={{
+                  budget: preferences?.budget ?? '',
+                  category_ids: preferences?.category_ids?.join(', ') ?? '',
+                }}
+                onSubmit={handleUpdatePreferences}
+                validate={validateUpdatePreferences}
+              >
+                <div className={styles.inputGroup}>
+                  <Input
+                    className={styles.input}
+                    label="Budget"
+                    name="budget"
+                    type="number"
+                    placeholder={preferences?.budget ?? 'Enter budget'}
+                    size="md"
+                    disabled={isUpdatingPreferences}
+                  />
+                  <Input
+                    className={styles.input}
+                    label="Category IDs"
+                    name="category_ids"
+                    type="text"
+                    placeholder="e.g. 1, 2, 3"
+                    size="md"
+                    disabled={isUpdatingPreferences}
+                  />
+                </div>
+                <Button className={styles.saveBtn} type="submit" size="md" color="primary" disabled={isUpdatingPreferences} wide>
+                  <span className={styles.line}>
+                    {isUpdatingPreferences ? (
+                      <>
+                        <Spinner size="sm" /> Saving...
+                      </>
+                    ) : (
+                      'Save Preferences'
+                    )}
+                  </span>
+                </Button>
+                <Error />
+              </Form>
+            )}
+          </section>
+        </StatCard>
+
         {/* Profile Delete Card */}
         <StatCard icon="trash" label="Delete Profile">
-          {/* Profile Deletion Management */}
           <section className={styles.deleteProfileSection}>
             <Button
               className={styles.actionBtn}
@@ -240,7 +332,7 @@ function ParticipantSettings() {
               color="translight"
               autoIconInvert
               size="md"
-              onClick={openDeleteProfilePopup} //
+              onClick={openDeleteProfilePopup}
             >
               <Icon name="warning" size="ty" black />
               <span>Delete profile</span>
@@ -260,14 +352,7 @@ function ParticipantSettings() {
       >
         <Modal.Title icon="image">Upload Picture</Modal.Title>
         <Modal.Description>Select a profile image to upload.</Modal.Description>
-
-        <Input
-          label="Profile Picture"
-          name="profile_image"
-          type="file"
-          accept="image/*"
-          placeholder="Choose an image" //
-        />
+        <Input label="Profile Picture" name="profile_image" type="file" accept="image/*" placeholder="Choose an image" />
       </Modal>
 
       {/* Delete Picture Modal */}

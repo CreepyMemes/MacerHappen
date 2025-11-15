@@ -1,9 +1,16 @@
+@use 'sass:color';
 @use '@styles/variables.module.scss' as *;
 
 /* Swipable card */
 .cardWrapper {
   position: relative;
   touch-action: pan-y;
+}
+
+@media (max-width: $bp-small) {
+  .card {
+    width: 80vw;
+  }
 }
 
 .card {
@@ -25,13 +32,11 @@
   outline-offset: 3px;
 }
 
-.cardWrapper:hover .card {
-  box-shadow:
-    0 14px 35px rgba(0, 0, 0, 0.09),
-    0 0 0 1px rgba(255, 255, 255, 0.4);
-  border-color: $border-hover;
+.cardWrapper {
+  position: relative;
+  touch-action: pan-y;
+  user-select: none;
 }
-
 /* Tinder-style badges */
 .badgeLike,
 .badgeSkip {
@@ -73,6 +78,8 @@
   height: 230px;
   object-fit: cover;
   display: block;
+  user-select: none; //  prevent selection
+  -webkit-user-drag: none; //  prevent drag ghost in WebKit (Chrome/Safari)
 }
 
 .cardBody {
@@ -192,7 +199,8 @@
 .like {
   background-color: $color-main;
   color: #fff;
-  border-color: darken($color-main, 5%);
+  // darken($color-main, 5%) -> color.adjust con lightness -5%
+  border-color: color.adjust($color-main, $lightness: -5%);
 }
 
 .like:hover:not(:disabled) {

@@ -1,8 +1,8 @@
 @use '@styles/variables.module.scss' as *;
 
 .client-settings {
-  margin: 5rem;
-
+  margin: 5rem auto;
+  max-width: 90rem; // prevent it from stretching too wide on big screens
   display: flex;
   flex-direction: column;
   gap: 5rem;
@@ -16,7 +16,6 @@
 
   .profile-image-section {
     padding: 2rem;
-
     display: flex;
     align-items: center;
     gap: 5rem;
@@ -27,10 +26,13 @@
     }
   }
 
-  .update-profile-section {
+  // PROFILE + PREFERENCES share the same layout
+  .update-profile-section,
+  .update-preferences-section {
     padding: 2rem;
 
-    .update-profile-form {
+    .update-profile-form,
+    .update-preferences-form {
       display: flex;
       flex-direction: column;
       gap: 2rem;
@@ -60,8 +62,38 @@
   }
 }
 
+/* MOBILE */
 @media (max-width: $bp-small) {
-  .input-group {
-    flex-direction: column;
+  .client-settings {
+    margin: 1.5rem 1rem; // smaller margins on phones
+    gap: 3rem;
   }
+
+  .client-settings .profile-image-section {
+    flex-direction: column; // stack image + buttons
+    align-items: flex-start;
+    padding: 1.5rem 0;
+    gap: 2rem;
+  }
+
+  .client-settings .profile-image-section .image-action {
+    flex-direction: column; // stack upload/delete buttons
+    width: 100%;
+    gap: 1.2rem;
+  }
+
+  .client-settings .update-profile-section,
+  .client-settings .update-preferences-section {
+    padding: 1.5rem 0;
+  }
+
+  .client-settings .update-profile-section .update-profile-form .input-group,
+  .client-settings .update-preferences-section .update-preferences-form .input-group {
+    flex-direction: column; // inputs full-width
+    gap: 1.2rem;
+  }
+}
+
+.input {
+  width: fit-content;
 }
