@@ -6,14 +6,14 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework import serializers
 
 
-def get_profile_image_path(instance, filename):
+def get_image_path(instance, filename, folder):
     """
-    Utility function that generates a unique file path for the uploaded profile picture.
-    Example: images/profile/1a2b3c4d5e6f7g8h9i0j.png
+    Utility function that generates a unique file path for the uploaded image.
+    Example: images/<folder>/1a2b3c4d5e6f7g8h9i0j.png
     """
     ext = filename.split('.')[-1]
     filename = f"{uuid.uuid4().hex}.{ext}"
-    return os.path.join('images', 'profile', filename)
+    return os.path.join('images', folder, filename)
 
 
 def get_user_from_uid_token(uidb64, token, role=None):

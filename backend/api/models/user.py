@@ -66,8 +66,8 @@ class User(AbstractUser):
         """
         Methohd that imports here to avoid circular import issues.
         """
-        from ..utils import get_profile_image_path
-        return get_profile_image_path(instance, filename)
+        from ..utils import get_image_path
+        return get_image_path(instance, filename, 'profile')
     
     def _username_validator():
         """
@@ -155,6 +155,9 @@ class Participant(User):
     surname = models.CharField(max_length=50)
     phone_number = models.CharField(validators=[_phone_number_validator()], max_length=16, blank=True, null=True)
 
+    categories = models.ManyToManyField("Category", related_name="participants", blank=True)
+    budget = models.DecimalField(max_digits=10, decimal_places=2, default=999999)
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.role = Roles.PARTICIPANT.value
@@ -164,26 +167,14 @@ class Participant(User):
         
         super().save(*args, **kwargs)
 
-    # @property
-    # def total_spent(self):
-    #     """
-    #     Returns the sum of the services in all completed appointments for this organizer.
-    #     """
-    #     from .appointment import AppointmentStatus
-    #     spent = (
-    #         self.appointments_created.filter(status=AppointmentStatus.COMPLETED.value)
-    #         .annotate(price_sum=Sum('services__price'))
-    #         .aggregate(total=Sum('price_sum'))['total']
-    #     )
-    #     return float(spent) if spent else 0.0
-
     def to_dict(self):
         base = super().to_dict()
         base.update({      
             'name': self.name,
             'surname': self.surname,
             'phone_number': self.phone_number,
-            # 'total_spent': self.total_spent,
+            'categories': [category.to_dict() for category in self.categories.all()],
+            'budget': float(self.budget),
         })
         return base
 
