@@ -1,17 +1,15 @@
 import axiosInstance from './axios/interceptors';
 import * as auth from './services/auth';
-import * as admin from './services/admin';
-import * as barber from './services/barber';
-import * as client from './services/client';
+import * as organizer from './services/organizer';
+import * as participant from './services/participant';
 import * as pub from './services/public';
 import * as image from './services/image';
 
 const api = {
   instance: axiosInstance,
   auth,
-  admin,
-  barber,
-  client,
+  organizer,
+  participant,
   pub,
   image,
 };

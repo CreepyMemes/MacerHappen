@@ -97,18 +97,18 @@ export async function refreshToken() {
 }
 
 /**
- * Registers a new client account.
+ * Registers a new participant account.
  */
-export async function registerClient(clientData) {
-  const { data } = await api.instance.post(ENDPOINTS.auth.registerClient, clientData);
+export async function registerParticipant(participantData) {
+  const { data } = await api.instance.post(ENDPOINTS.auth.registerClient, participantData);
   return data;
 }
 
 /**
- * Registers a new barber account using a verification token and UID.
+ * Registers a new organizer account.
  */
-export async function registerBarber(uidb64, token, barberData) {
-  const { data } = await api.instance.post(ENDPOINTS.auth.registerBarber(uidb64, token), barberData);
+export async function registerOrganizer(organizerData) {
+  const { data } = await api.instance.post(ENDPOINTS.auth.registerClient, organizerData);
   return data;
 }
 

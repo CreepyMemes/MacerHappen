@@ -8,5 +8,5 @@ from ..views import (
 urlpatterns = [
     path("events/", get_events, name="list_events"),
     path("events/<int:event_id>/", get_event_detail, name="get_event_detail"),
-    path("events/categories/", get_categories, name="get_categories"),
+    path("categories/", get_categories, name="get_categories"),
 ]

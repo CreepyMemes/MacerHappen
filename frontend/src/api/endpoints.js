@@ -10,55 +10,35 @@ export const ENDPOINTS = {
     logout: '/auth/logout/',
     refresh: '/auth/refresh-token/',
     resetPassword: '/auth/reset-password/',
-    registerClient: '/auth/register/',
-    registerBarber: (uidb64, token) => `/auth/register/${uidb64}/${token}/`,
+    registerParticipant: '/auth/register/participant/',
+    registerOrganizer: '/auth/register/organizer/',
     emailFromToken: (uidb64, token) => `/auth/email/${uidb64}/${token}/`,
     resetPasswordConfirm: (uidb64, token) => `/auth/reset-password/${uidb64}/${token}/`,
     verifyEmail: (uidb64, token) => `/auth/verify/${uidb64}/${token}/`,
   },
 
   // Admin Routes
-  admin: {
-    profile: '/admin/profile/',
-    barbers: '/admin/barbers/',
-    clients: '/admin/clients/',
-    appointments: '/admin/appointments/',
-    inviteBarber: '/admin/barbers/invite/',
-    barber: (barberId) => `/admin/barbers/${barberId}/`,
-    barberAvailabilities: (barberId) => `/admin/barbers/${barberId}/availabilities/`,
-    barberAvailability: (barberId, availabilityId) => `/admin/barbers/${barberId}/availabilities/${availabilityId}/`,
+  // (Placeholder for future admin routes)
+
+  // Organizers Routes
+  organizers: {
+    events: '/organizers/events/',
+    event: (eventId) => `/organizers/events/${eventId}/`,
   },
 
-  // Barber Routes
-  barber: {
-    profile: '/barber/profile/',
-    availabilities: '/barber/availabilities/',
-    appointments: '/barber/appointments/',
-    reviews: '/barber/reviews/',
-    services: '/barber/services/',
-    service: (serviceId) => `/barber/services/${serviceId}/`,
-  },
-
-  // Client Routes
-  client: {
-    profile: '/client/profile/',
-    appointments: '/client/appointments/',
-    reviews: '/client/reviews/',
-    review: (reviewId) => `/client/reviews/${reviewId}/`,
-    createReview: (barberId) => `/client/reviews/barbers/${barberId}/`,
-    createAppointment: (barberId) => `/client/appointments/barbers/${barberId}/`,
-    appointment: (appointmentId) => `/client/appointments/${appointmentId}/`,
-    barbers: '/client/barbers/',
+  // Participant Routes
+  participant: {
+    preferences: '/participants/preferences/',
+    feed: '/participants/feed/',
+    swipes: '/participants/swipes/',
+    swipeHistory: '/participants/swipes/history/',
   },
 
   // Public Routes
   public: {
-    barbers: '/public/barbers/',
-    barberAvailabilities: (barberId) => `/public/barbers/${barberId}/availabilities/`,
-    barberSlots: (barberId) => `/public/barbers/${barberId}/slots/`,
-    barberProfile: (barberId) => `/public/barbers/${barberId}/profile/`,
-    barberServices: (barberId) => `/public/barbers/${barberId}/services/`,
-    clientProfile: (clientId) => `/public/clients/${clientId}/profile/`,
+    categories: '/public/categories/',
+    events: '/public/events/',
+    event: (eventId) => `/public/events/${eventId}/`,
   },
 
   // Image Routes

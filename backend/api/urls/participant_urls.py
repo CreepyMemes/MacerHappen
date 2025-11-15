@@ -13,6 +13,6 @@ urlpatterns = [
 
     # Swipe actions
     path('swipes/', create_swipe, name='create_swipe'),
-    path('swipes/history/', get_swipe_history, name='get_swipe_history'),
-    path("recommendations/feed/", get_recommendation_feed, name="recommendation-feed"),
+    path('swipes/history', get_swipe_history, name='get_swipe_history'),
+    path("feed/", get_recommendation_feed, name="recommendation-feed"),
 ]
