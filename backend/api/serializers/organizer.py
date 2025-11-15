@@ -29,6 +29,7 @@ class CreateOrganizerEventSerializer(OrganizerValidationMixin, CategoryValidatio
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
     date = serializers.DateTimeField(required=True)
     category_ids = serializers.ListField(child=serializers.IntegerField(), required=True)
+    picture = serializers.ImageField(required=False, allow_null=True)
 
     def validate(self, attrs):
         attrs = self.validate_organizer(attrs)
@@ -42,6 +43,7 @@ class CreateOrganizerEventSerializer(OrganizerValidationMixin, CategoryValidatio
         categories = validated_data["categories"]
         title = validated_data["title"]
         description = validated_data["description"]
+        picture = validated_data.get("picture", None)
 
         # Run AI moderation BEFORE creating
         moderation_result = moderate_event_content(title=title, description=description)
@@ -89,6 +91,7 @@ class UpdateOrganizerEventSerializer(OrganizerValidationMixin, EventValidationMi
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     date = serializers.DateTimeField(required=False)
     category_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
+    picture = serializers.ImageField(required=False, allow_null=True)
 
     def validate(self, attrs):
         attrs = self.validate_organizer(attrs)
@@ -112,6 +115,14 @@ class UpdateOrganizerEventSerializer(OrganizerValidationMixin, EventValidationMi
             instance.date = validated_data["date"]
         if "categories" in validated_data:
             instance.category.set(validated_data["categories"])
+        
+        # Handle picture update/removal
+        if "picture" in validated_data:
+            
+            if instance.picture:
+                instance.picture.delete(save=False) # remove previous file from storage
+
+            instance.picture = validated_data["picture"] # if new file is provided -> set it; if None -> clear field
 
         instance.save()
         return instance
