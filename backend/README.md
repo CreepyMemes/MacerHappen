@@ -1,3 +1,5 @@
+# Tinder-for-Events App project
+
 ## **1. Define Project Structure**
 
 ### **Backend (Django)**
@@ -116,12 +118,9 @@
 
 ## **4. Implementation**
 
-Perfect — here’s a **clean, complete list of endpoints** your Tinder-for-Events app needs.
-I’ll group them by feature and clearly describe what each one should do.
+# Endpoints In detail
 
----
-
-# ⭐ **AUTH ENDPOINTS**
+## **AUTH ENDPOINTS**
 
 ### **POST /auth/register/**
 
@@ -142,7 +141,7 @@ I’ll group them by feature and clearly describe what each one should do.
 
 ---
 
-# ⭐ **PARTICIPANT ENDPOINTS**
+## **PARTICIPANT ENDPOINTS**
 
 ### **GET /participants/preferences/**
 
@@ -154,7 +153,7 @@ I’ll group them by feature and clearly describe what each one should do.
 
 ---
 
-# ⭐ **ORGANIZER ENDPOINTS**
+## **ORGANIZER ENDPOINTS**
 
 ### **POST /organizers/events/**
 
@@ -181,7 +180,7 @@ I’ll group them by feature and clearly describe what each one should do.
 
 ---
 
-# ⭐ **EVENT ENDPOINTS**
+## **EVENT ENDPOINTS**
 
 ### **GET /events/**
 
@@ -197,7 +196,7 @@ I’ll group them by feature and clearly describe what each one should do.
 
 ---
 
-# ⭐ **SWIPE ENDPOINTS**
+## **SWIPE ENDPOINTS**
 
 ### **POST /swipes/**
 
@@ -211,7 +210,7 @@ I’ll group them by feature and clearly describe what each one should do.
 
 ---
 
-# ⭐ **RECOMMENDATION ENDPOINT**
+## **RECOMMENDATION ENDPOINT**
 
 ### **GET /recommendations/feed/**
 
@@ -226,39 +225,49 @@ This is the Tinder-like event feed.
 
 ---
 
-# 🎯 Summary of all endpoints you need
+# Summary of all endpoints
 
-### **Auth**
+### Auth ✅
 
-- POST /auth/register/
-- POST /auth/login/
-- POST /auth/logout/
-- GET /auth/me/
+- POST /auth/refresh-token/ ✅
+- POST /auth/register/participant/ ✅
+- POST /auth/register/organizer/ ✅
+- POST /auth/verify/<uidb64>/<token>/ ✅
+- GET /auth/email/<uidb64>/<token>/ ✅
 
-### **Participants**
+- POST /auth/login/ ✅
+- POST /auth/logout/ ✅
+- GET /auth/me/ ✅
 
-- GET /participants/preferences/
-- PUT /participants/preferences/
+- POST /auth/reset-password/ ✅
+- POST /auth/reset-password/<uidb64>/<token>/ ✅
 
-### **Organizers**
+### Participants
 
-- POST /organizers/events/
-- GET /organizers/events/
-- GET /organizers/events/<id>/
-- PUT /organizers/events/<id>/
-- DELETE /organizers/events/<id>/
+- GET /participants/preferences/ ✅
+- PATCH /participants/preferences/ ✅
 
-### **Events**
-
-- GET /events/
-- GET /events/<id>/
-- GET /events/categories/
-
-### **Swipes**
+**Swipes**
 
 - POST /swipes/
 - GET /swipes/history/
 
-### **Recommendations**
+**Recommendations** (⚠️ ai based)
 
 - GET /recommendations/feed/
+
+### Organizers (⚠️ add ai moderation)
+
+- POST /organizers/events/ ✅
+- GET /organizers/events/ ✅
+- PATCH /organizers/events/<id>/ ✅
+- GET /organizers/events/<id>/ ✅
+- DELETE /organizers/events/<id>/ ✅
+
+### Public
+
+**Events**
+
+- GET /events/
+- GET /events/<id>/
+- GET /events/categories/ ✅

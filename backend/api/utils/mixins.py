@@ -258,3 +258,37 @@ class SwipeValidationMixin:
 
         attrs["event"] = event
         return attrs
+    
+class GetCategoriesMixin:
+    def get_categories_public(self):
+        from ..models import Category
+        return [{"id": c.id, "name": c.name} for c in Category.objects.all()]
+
+
+class GetEventsMixin:
+    """
+    Helpers to serialize events.
+    """
+    def get_events_for_organizer(self, organizer_id):
+        from ..models import Event
+
+        events = Event.objects.filter(organizer_id=organizer_id).order_by("-created_at")
+        return [self._event_to_dict(e) for e in events]
+
+    def get_public_events(self):
+        from ..models import Event
+        
+        events = Event.objects.filter(approved=True).order_by("date")
+        return [self._event_to_dict(e) for e in events]
+
+    def _event_to_dict(self, event):
+        return {
+            "id": event.id,
+            "organizer_id": event.organizer_id,
+            "title": event.title,
+            "description": event.description,
+            "price": float(event.price),
+            "date": event.date,
+            "approved": event.approved,
+            "categories": [c.id for c in event.category.all()],
+        }
