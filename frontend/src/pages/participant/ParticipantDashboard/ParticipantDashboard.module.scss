@@ -1,0 +1,149 @@
+@use '@styles/variables.module.scss' as *;
+
+.participantDashboard {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  background: radial-gradient(circle at top, $color-secondary 0, $color-light 45%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $color-primary;
+}
+
+.loadingWrapper {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  width: min(900px, 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: $color-main;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.35rem;
+  color: $color-muted;
+}
+
+.preferences {
+  background-color: $color-card;
+  border-radius: $border-radius;
+  border: 1px solid $border-light;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+}
+
+.prefLabel {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-muted;
+}
+
+.prefValue {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $color-primary;
+  margin-top: 0.2rem;
+}
+
+.feedContainer {
+  width: min(420px, 100%);
+  position: relative;
+}
+
+.errorBanner {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: $border-radius;
+  background-color: $color-error-bg;
+  border: 1px solid $border-error;
+  color: $color-error;
+  font-size: 0.95rem;
+}
+
+/* Counter & empty state */
+.counter {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: $color-muted;
+}
+
+.emptyState {
+  background-color: $color-card;
+  border-radius: $border-radius;
+  border: 1px solid $border-light;
+  padding: 2rem 2.2rem;
+  text-align: center;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-main;
+  margin-bottom: 0.6rem;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: $color-muted;
+  margin-bottom: 1.4rem;
+}
+
+.reloadButton {
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  background-color: $color-main;
+  color: #fff;
+  border: 1px solid darken($color-main, 5%);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    transform 0.1s ease-out,
+    box-shadow 0.1s ease-out;
+}
+
+.reloadButton:hover {
+  background-color: $color-lighter;
+  border-color: $border-hover;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive */
+@media (max-width: $bp-small) {
+  .participantDashboard {
+    padding: 2.5rem 1.2rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .feedContainer {
+    width: 100%;
+  }
+}

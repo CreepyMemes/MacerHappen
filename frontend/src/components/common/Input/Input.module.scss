@@ -75,7 +75,7 @@
     border-radius: 4px;
 
     &:hover {
-      color: $color-primary;
+      color: $color-black;
       text-decoration: underline;
     }
 
@@ -107,7 +107,7 @@
     border-radius: $border-radius;
     outline: none;
 
-    color: $color-primary;
+    color: $color-black;
 
     appearance: none; // Remove native arrow
     cursor: pointer;
@@ -115,12 +115,12 @@
     transition: border-color 0.2s;
 
     &:focus {
-      border-color: $color-primary;
+      border-color: $color-black;
     }
 
     &:disabled {
       background: $color-muted;
-      color: $color-primary;
+      color: $color-black;
       cursor: not-allowed;
     }
   }
@@ -145,7 +145,7 @@
     border-radius: $border-radius;
     border: 1px solid $border-light;
 
-    color: $color-primary;
+    color: $color-black;
 
     transition: border-color 0.2s;
 
@@ -155,12 +155,12 @@
 
     &:focus {
       outline: none;
-      border-color: $color-primary;
+      border-color: $color-black;
     }
 
     &:disabled {
       background: $color-muted;
-      color: $color-primary;
+      color: $color-black;
       cursor: not-allowed;
     }
   }
@@ -178,7 +178,7 @@
 .label {
   display: flex;
   flex-direction: column;
-  color: $color-primary;
+  color: $color-black;
   font-size: 1.3rem;
 }
 
@@ -233,7 +233,7 @@
 
   .checkbox-legend {
     font-weight: 600;
-    color: $color-primary;
+    color: $color-black;
     margin-bottom: 1rem;
     font-size: 1.2rem;
   }
@@ -327,7 +327,7 @@
       // Custom label text
       .checkbox-text {
         padding-left: 0;
-        color: $color-primary;
+        color: $color-black;
         align-content: center;
         word-break: break-word;
         cursor: pointer;

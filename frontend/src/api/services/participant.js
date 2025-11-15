@@ -47,6 +47,6 @@ export async function getSwipeHistory() {
  * Participant only: Get personalized event feed (AI-ranked).
  */
 export async function getFeed() {
-  const { data } = await api.instance.get(ENDPOINTS.participant.Feed);
+  const { data } = await api.instance.get(ENDPOINTS.participant.feed);
   return data;
 }

@@ -56,7 +56,7 @@ function RegisterOrganizer() {
     setLoading(true);
 
     try {
-      await api.auth.registerClient({ name, surname, username, email, password });
+      await api.auth.registerOrganizer({ name, surname, username, email, password });
       navigate('/login?registered=1', { replace: true });
     } finally {
       setLoading(false);

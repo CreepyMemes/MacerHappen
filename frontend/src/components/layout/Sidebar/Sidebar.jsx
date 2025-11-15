@@ -11,23 +11,16 @@ import ProfileImage from '@components/ui/ProfileImage/ProfileImage';
 
 const organizerNav = [
   { to: '/organizer/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/organizer/services', label: 'Services', icon: 'service' },
-  { to: '/organizer/appointments', label: 'Appointments', icon: 'appointment' },
-  { to: '/organizer/availabilities', label: 'Availabilities', icon: 'availability' },
-  { to: '/organizer/reviews', label: 'Reviews', icon: 'review' },
   { to: '/organizer/settings', label: 'Settings', icon: 'settings' },
 ];
 const participantNav = [
   { to: '/participant/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/participant/barbers', label: 'Barbers', icon: 'barber' },
-  { to: '/participant/appointments', label: 'Appointments', icon: 'appointment' },
-  { to: '/participant/reviews', label: 'Reviews', icon: 'review' },
   { to: '/participant/settings', label: 'Settings', icon: 'settings' },
 ];
 
 function Sidebar() {
   const { isAuthenticated, profile, isFetchingProfile } = useAuth();
-  const [open, setOpen] = useState(true); // Sidebar open/collapsed state
+  const [open, setOpen] = useState(false); // Sidebar open/collapsed state
 
   // Get role specific nav items
   let navItems = [];

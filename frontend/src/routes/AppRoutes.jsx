@@ -15,17 +15,8 @@ import RequestPasswordReset from '@pages/RequestPasswordReset/RequestPasswordRes
 import ConfirmPasswordReset from '@pages/ConfirmPasswordReset/ConfirmPasswordReset';
 import NotFound from '@pages/NotFound/NotFound';
 
-// import Dashboard from '@pages/Dashboard/Dashboard';
-// import Settings from '@pages/Settings/Settings';
-
-// import BarberServices from '@pages/barber/BarberServices/BarberServices';
-// import BarberAppointments from '@pages/barber/BarberAppointments/BarberAppointments';
-// import BarberAvailabilities from '@pages/barber/BarberAvailabilities/BarberAvailabilities';
-// import BarberReviews from '@pages/barber/BarberReviews/BarberReviews';
-
-// import ClientAppointments from '@pages/client/ClientAppointments/ClientAppointments';
-// import ClientReviews from '@pages/client/ClientReviews/ClientReviews';
-// import ClientBarbers from '@pages/client/ClientBarbers/ClientBarbers';
+import Dashboard from '@pages/Dashboard/Dashboard';
+import Settings from '@pages/Settings/Settings';
 
 // Helper for cleaner protected route declaration
 const protectedRoute = (element, role) => <ProtectedRoute role={role}>{element}</ProtectedRoute>;
@@ -49,8 +40,8 @@ function AppRoutes() {
         <Route path="settings" element={protectedRoute(<RoleRedirect />)} />
 
         {/* Role based pages */}
-        {/* <Route path=":role/dashboard" element={protectedRoute(<Dashboard />)} />
-        <Route path=":role/settings" element={protectedRoute(<Settings />)} /> */}
+        <Route path=":role/dashboard" element={protectedRoute(<Dashboard />)} />
+        <Route path=":role/settings" element={protectedRoute(<Settings />)} />
 
         {/* Unique role protected pages */}
 

@@ -1,0 +1,203 @@
+@use '@styles/variables.module.scss' as *;
+
+/* Swipable card */
+.cardWrapper {
+  position: relative;
+  touch-action: pan-y;
+}
+
+.card {
+  background-color: $color-card;
+  border-radius: $border-radius;
+  border: 1px solid $border-light;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  padding: 1.5rem 1.5rem 1.8rem 1.5rem;
+  transition:
+    box-shadow 0.25s ease-out,
+    border-color 0.25s ease-out;
+}
+
+.cardWrapper:focus-visible .card {
+  outline: 2px solid $border-hover;
+  outline-offset: 3px;
+}
+
+.cardWrapper:hover .card {
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.09),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
+  border-color: $border-hover;
+}
+
+/* Tinder-style badges */
+.badgeLike,
+.badgeSkip {
+  position: absolute;
+  top: 1.1rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 2px solid;
+  background-color: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+}
+
+.badgeLike {
+  left: 1.1rem;
+  color: #2e8b57;
+  border-color: #2e8b57;
+  transform: rotate(-8deg);
+}
+
+.badgeSkip {
+  right: 1.1rem;
+  color: #c0392b;
+  border-color: #c0392b;
+  transform: rotate(8deg);
+}
+
+.imageWrapper {
+  margin: -1.5rem -1.5rem 1.2rem -1.5rem;
+  max-height: 230px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eventTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-main;
+  margin: 0;
+}
+
+.price {
+  background-color: $color-card-dark;
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $color-primary;
+  border: 1px solid $border-light;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.metaLabel {
+  color: $color-muted;
+  font-weight: 600;
+}
+
+.metaValue {
+  color: $color-primary;
+  font-weight: 500;
+  text-align: right;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.categoryChip {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid $color-tag-yellow-border;
+  background-color: $color-tag-yellow-bg;
+  color: $color-tag-yellow-text;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.description {
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: $color-primary;
+}
+
+/* Actions (buttons on the card) */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    color 0.2s ease-out,
+    transform 0.1s ease-out,
+    box-shadow 0.1s ease-out;
+}
+
+.actionButton:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.dislike {
+  background-color: $color-secondary;
+  color: $color-primary;
+  border-color: $border-light;
+}
+
+.dislike:hover:not(:disabled) {
+  background-color: $color-tertiary;
+  border-color: $border-hover;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.like {
+  background-color: $color-main;
+  color: #fff;
+  border-color: darken($color-main, 5%);
+}
+
+.like:hover:not(:disabled) {
+  background-color: $color-lighter;
+  border-color: $border-hover;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}

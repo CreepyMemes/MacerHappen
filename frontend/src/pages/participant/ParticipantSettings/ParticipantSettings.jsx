@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@hooks/useAuth';
 import { isAnyFieldSet } from '@utils/utils';
-import styles from './ClientSettings.module.scss';
+import styles from './ParticipantSettings.module.scss';
 import api from '@api';
 
 import StatCard from '@components/ui/StatCard/StatCard';
@@ -14,7 +14,7 @@ import ProfileImage from '@components/ui/ProfileImage/ProfileImage';
 import Spinner from '@components/common/Spinner/Spinner';
 import Error from '@components/common/Error/Error';
 
-function ClientSettings() {
+function ParticipantSettings() {
   const { profile, setProfile, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,7 +32,7 @@ function ClientSettings() {
     setIsLoading(true);
 
     try {
-      const { profile } = await api.client.getClientProfile();
+      const { profile } = await api.client.getParticipantProfile();
       setProfile(profile);
     } finally {
       setIsLoading(false);
@@ -83,7 +83,7 @@ function ClientSettings() {
    * Handles deleting a new profile picture
    */
   const handleDeleteProfile = async () => {
-    await api.client.deleteClientProfile();
+    await api.client.deleteParticipantProfile();
     closeDeleteProfilePopup();
     await logout();
   };
@@ -117,7 +117,7 @@ function ClientSettings() {
     if (phone_number && phone_number.trim() !== '') payload.phone_number = phone_number.trim();
 
     try {
-      await api.client.updateClientProfile(payload);
+      await api.client.updateParticipantProfile(payload);
       await fetchProfile(); // Refresh profile after update
     } finally {
       setIsUpdatingProfile(false);
@@ -295,4 +295,4 @@ function ClientSettings() {
   );
 }
 
-export default ClientSettings;
+export default ParticipantSettings;

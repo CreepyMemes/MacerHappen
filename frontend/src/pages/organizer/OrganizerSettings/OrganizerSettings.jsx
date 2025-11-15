@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@hooks/useAuth';
 import { isAnyFieldSet } from '@utils/utils';
-import styles from './BarberSettings.module.scss';
+import styles from './OrganizerSettings.module.scss';
 import api from '@api';
 
 import StatCard from '@components/ui/StatCard/StatCard';
@@ -14,7 +14,7 @@ import ProfileImage from '@components/ui/ProfileImage/ProfileImage';
 import Spinner from '@components/common/Spinner/Spinner';
 import Error from '@components/common/Error/Error';
 
-function BarberSettings() {
+function OrganizerSettings() {
   const { profile, setProfile, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,7 +32,7 @@ function BarberSettings() {
     setIsLoading(true);
 
     try {
-      const { profile } = await api.barber.getBarberProfile();
+      const { profile } = await api.barber.getOrganizerProfile();
       setProfile(profile);
     } finally {
       setIsLoading(false);
@@ -83,7 +83,7 @@ function BarberSettings() {
    * Handles deleting a new profile picture
    */
   const handleDeleteProfile = async () => {
-    await api.barber.deleteBarberProfile();
+    await api.barber.deleteOrganizerProfile();
     closeDeleteProfilePopup();
     await logout();
   };
@@ -117,7 +117,7 @@ function BarberSettings() {
     if (description && description.trim() !== '') payload.description = description.trim();
 
     try {
-      await api.barber.updateBarberProfile(payload);
+      await api.barber.updateOrganizerProfile(payload);
       await fetchProfile(); // Refresh profile after update
     } finally {
       setIsUpdatingProfile(false);
@@ -294,4 +294,4 @@ function BarberSettings() {
   );
 }
 
-export default BarberSettings;
+export default OrganizerSettings;

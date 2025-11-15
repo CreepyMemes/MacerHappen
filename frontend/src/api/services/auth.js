@@ -100,7 +100,7 @@ export async function refreshToken() {
  * Registers a new participant account.
  */
 export async function registerParticipant(participantData) {
-  const { data } = await api.instance.post(ENDPOINTS.auth.registerClient, participantData);
+  const { data } = await api.instance.post(ENDPOINTS.auth.registerParticipant, participantData);
   return data;
 }
 
@@ -108,7 +108,7 @@ export async function registerParticipant(participantData) {
  * Registers a new organizer account.
  */
 export async function registerOrganizer(organizerData) {
-  const { data } = await api.instance.post(ENDPOINTS.auth.registerClient, organizerData);
+  const { data } = await api.instance.post(ENDPOINTS.auth.registerOrganizer, organizerData);
   return data;
 }
 
